@@ -1,10 +1,11 @@
-import Home from "./component/home/Home";
 import "./App.css";
+import AddNewSite from "./component/add-new-site/AddNewSite";
+import './assets/css/global.css'
 
 function App() {
   return (
     <div>
-      <Home />
+      <AddNewSite />
     </div>
   );
 }

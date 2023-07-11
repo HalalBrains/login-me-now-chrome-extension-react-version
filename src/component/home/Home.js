@@ -1,11 +1,11 @@
 import React from 'react'
-import Search from './home-component/Search'
-import AddNewSite from './home-component/AddNewSite'
-import LoggedInSites from './home-component/LoggedInSites'
+import Search from './home-components/Search'
+import AddNewSite from './home-components/AddNewSite'
+import LoggedInSites from './home-components/LoggedInSites'
 function Home() {
   return (
     <>
-    <div className="p-8 flex items-center justify-between border-b">
+    <div className="p-6 flex items-center justify-between border-b">
         <Search classNames="w-full"/>
         <AddNewSite classNames=""/>
     </div>
