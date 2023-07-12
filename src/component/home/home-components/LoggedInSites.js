@@ -9,16 +9,16 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TextField, Tooltip } from '@mui/material';
+import {  Tooltip } from '@mui/material';
 
 const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-export default function LoggedInSites() {
+export default function LoggedInSites({searchQuery, setSearchQuery}) {
   const [dense] = useState(false);
   const [data, setData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/photos')
@@ -38,19 +38,12 @@ export default function LoggedInSites() {
     item.thumbnailUrl.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
+  
+
+
 
   return (
     <>
-      <TextField
-        label="Search"
-        className="w-full"
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
-      
       <Box className="w-full px-6">
         <Grid>
           <Demo>
