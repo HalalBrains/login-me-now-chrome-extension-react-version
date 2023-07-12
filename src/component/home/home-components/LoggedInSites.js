@@ -15,7 +15,7 @@ const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-export default function LoggedInSites({searchQuery, setSearchQuery}) {
+export default function LoggedInSites({searchQuery}) {
   const [dense] = useState(false);
   const [data, setData] = useState([]);
   
@@ -23,7 +23,7 @@ export default function LoggedInSites({searchQuery, setSearchQuery}) {
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/photos')
       .then((response) => response.json())
-      .then((data) => setData(data.slice(0, 49))); // Limiting to the first 49 items
+      .then((data) => setData(data.slice(0, 50))); // Limiting to the first 49 items
   }, []);
 
   const truncateText = (text, maxLength) => {
@@ -33,12 +33,13 @@ export default function LoggedInSites({searchQuery, setSearchQuery}) {
     return text.substr(0, maxLength) + '...';
   };
 
+
+
   const filteredData = data.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.thumbnailUrl.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  
 
 
 

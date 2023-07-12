@@ -1,10 +1,10 @@
 {
-  "manifest_version": 3,
-  "name":"Login Me Now Chrome Extension",
+  "name":"My Login Me Now Chrome Extension",
   "description": "Login Me Now Chrome Extension React version",
   "version": "0.0.1",
+  "manifest_version": 3,
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "popup.html",
     "default_title": "Open"
   },
   "permissions": ["scripting"],
