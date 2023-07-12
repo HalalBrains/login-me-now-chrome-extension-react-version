@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import wordpressImage from '../../../assets/images/wordpress.png';
+import { Tooltip } from '@mui/material';
 
 function generate(element) {
   return [0, 1, 2, 3].map((value) =>
@@ -25,19 +26,20 @@ const Demo = styled('div')(({ theme }) => ({
 
 export default function LoggedInSites() {
   const [dense] = React.useState(false);
-  const [secondary] = React.useState(true);
 
   return (
-    <Box className="w-full px-8">
+    <Box className="w-full px-6">
       <Grid>
         <Demo>
           <List dense={dense}>
             {generate(
               <ListItem
                 secondaryAction={
+                    <Tooltip title="Delete" placement="left">
                   <IconButton edge="end" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
+                    </Tooltip>
                 }
               >
                 <ListItemAvatar>
@@ -45,7 +47,7 @@ export default function LoggedInSites() {
                 </ListItemAvatar>
                 <ListItemText
                   primary="Softency"
-                  secondary={secondary ? 'https://www.softency.com' : null}
+                  secondary={'https://www.softency.com'}
                 />
               </ListItem>,
             )}

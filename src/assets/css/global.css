@@ -1,3 +1,17 @@
 .margin-b-2 {
   margin-bottom: 0.5rem !important;
 }
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  background: white!important;
+  padding: 0 10px!important;
+  z-index: 999!important;
+}
+li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root {
+  padding: 0!important;
+}
+li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root:hover {
+  background-color: #f5f5f5;
+}
+li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton-sizeMedium.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root:hover{
+color: #d11a2a;
+}
