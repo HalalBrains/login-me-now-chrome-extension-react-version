@@ -34,7 +34,8 @@ export default function LoggedInSites() {
   };
 
   const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.thumbnailUrl.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
@@ -49,6 +50,7 @@ export default function LoggedInSites() {
         value={searchQuery}
         onChange={handleSearchChange}
       />
+      
       <Box className="w-full px-6">
         <Grid>
           <Demo>
