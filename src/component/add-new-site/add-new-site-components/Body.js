@@ -18,21 +18,21 @@ function Body() {
 
   return (
     <div className="p-6">
-      <h1 className="text-[22px] text-center py-5">Authenticate Login Using</h1>
+      <h1 className="text-[22px] text-center py-5 text-[#005E54] font-bold">Authenticate Login Using</h1>
 
       <div className="flex justify-center">
         <button
-          className={`mr-3 border-b-2 ${
-            showDashboardAccess ? 'border-b-[#264093]' : ''
-          } hover:border-b-[#264093] pb-2 px-2`}
+          className={`mr-3 border-b-2 text-[#00231F] ${
+            showDashboardAccess ? 'border-b-[#005E54]' : ''
+          } hover:border-b-[#005E54] pb-2 px-2`}
           onClick={handleDashboardAceess}
         >
           Dashboard Access
         </button>
         <button
-          className={`ml-3 border-b-2 ${
-            showExtensionToken ? 'border-b-[#264093]' : ''
-          } hover:border-b-[#264093] pb-2 px-2`}
+          className={`ml-3 border-b-2 text-[#00231F]${
+            showExtensionToken ? 'border-b-[#005E54]' : ''
+          } hover:border-b-[#005E54] pb-2 px-2`}
           onClick={handleExtensionToken}
         >
           Extension Token

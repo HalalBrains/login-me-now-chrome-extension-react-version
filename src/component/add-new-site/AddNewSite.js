@@ -11,4 +11,4 @@ function AddNewSite() {
   )
 }
 
-export default AddNewSite
+export default AddNewSite;

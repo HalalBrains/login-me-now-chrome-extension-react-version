@@ -1,17 +1,20 @@
 .margin-b-2 {
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 1rem !important;
 }
-.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
-  background: white!important;
-  padding: 0 10px!important;
-  z-index: 999!important;
+.MuiFormControl-root.MuiTextField-root.w-full.margin-b-2.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  z-index: 9;
 }
+label.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.Mui-focused.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-outlined.css-uiigua-MuiFormLabel-root-MuiInputLabel-root {
+  padding: 0px 10px;
+  background: white;
+}
+
 li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root {
   padding: 0!important;
 }
 li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root:hover {
   background-color: #f5f5f5;
 }
-li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton-sizeMedium.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root:hover{
-color: #d11a2a;
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton-sizeMedium.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root:hover svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-i4bv87-MuiSvgIcon-root {
+  color: #d11a2a!important;
 }

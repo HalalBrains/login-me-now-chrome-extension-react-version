@@ -55,7 +55,7 @@ export default function LoggedInSites({searchQuery}) {
                   secondaryAction={
                     <Tooltip title="Delete" placement="left">
                       <IconButton edge="end" aria-label="delete">
-                        <DeleteIcon />
+                        <DeleteIcon  style={{color:"#005E54"}}/>
                       </IconButton>
                     </Tooltip>
                   }
