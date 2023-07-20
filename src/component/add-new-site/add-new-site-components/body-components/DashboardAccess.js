@@ -39,11 +39,12 @@ function DashboardAccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save data to chrome.storage.local
-    
+
     // eslint-disable-next-line no-undef
     chrome.storage.local.set({ siteUrl, email, password }, function () {
-      console.log("Data saved to chrome.storage.local");
+      // eslint-disable-next-line no-undef
+      console.log(chrome.storage.set)
+      console.log("Data saved to chrome.storage.local" + "site url: " + siteUrl + "email: " + email + "password: " + password)
     });
   };
 
