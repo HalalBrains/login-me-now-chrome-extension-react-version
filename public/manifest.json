@@ -1,15 +1,23 @@
 {
-  "name":"Login Me Now - WordPress Login Manager",
-  "description": "A time saver instant login app for WordPress Websites",
-  "version": "1.4.2",
   "manifest_version": 3,
+  "name": "Login Me Now - WordPress Login Manager",
+  "version": "1.4.2",
+  "author": "Login Me Now",
+  "description": "A time saver instant login app for WordPress Websites",
+  "update_url": "https://clients2.google.com/service/update2/crx",
   "action": {
     "default_popup": "index.html",
-    "default_title": "Open"
+    "default_title": "Login Me Now"
   },
-  "permissions": ["scripting"],
-  "host_permissions": [
-    "http://*/",
-    "https://*/"
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline';"
+  },
+  "permissions": ["storage", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
   ]
 }
