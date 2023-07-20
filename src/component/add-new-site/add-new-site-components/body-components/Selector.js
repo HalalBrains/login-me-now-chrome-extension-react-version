@@ -33,7 +33,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function Selector({classNames}) {
+export default function Selector({classNames, name, handleAccessHoursChange}) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
@@ -52,8 +52,9 @@ export default function Selector({classNames}) {
       <FormControl className={classNames}>
         <InputLabel>Save for</InputLabel>
         <Select
+          name={name}
           value={personName}
-          onChange={handleChange}
+          onChange={handleAccessHoursChange}
           input={<OutlinedInput label="Name" />}
           MenuProps={MenuProps}
         >
