@@ -41,7 +41,31 @@ export default function LoggedInSites({searchQuery}) {
   );
 
 
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    chrome.storage.local.get("loginMeNowTokens", function (data) {
+      let tokens = data.loginMeNowTokens;
 
+      console.log(tokens)
+      
+      for (const key in tokens) {
+        const value = tokens[key];
+        console.log(`${key} : ${value}`);
+        
+        if (typeof value === 'object' && value !== null) {
+          for (const itemKey in value) {
+            const itemValue = value[itemKey];
+            // eslint-disable-next-line no-undef
+            console.log(`${itemKey} :) ${itemValue}`);
+          }
+        }
+      }
+      
+    });
+  }, []);
+
+  
+  
 
   return (
     <>
