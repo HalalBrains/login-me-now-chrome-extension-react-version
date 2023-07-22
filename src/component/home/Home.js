@@ -3,6 +3,7 @@ import Search from './home-components/Search'
 import AddNewSite from './home-components/AddNewSite'
 import LoggedInSites from './home-components/LoggedInSites'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,7 +15,9 @@ function Home() {
     <>
     <div className="p-6 flex items-center justify-between border-b">
         <Search classNames="w-full" handleSearchChange={handleSearchChange}/>
+        <Link to="/add-new-site">
         <AddNewSite classNames=""/>
+        </Link>
     </div>
     
     <LoggedInSites searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>

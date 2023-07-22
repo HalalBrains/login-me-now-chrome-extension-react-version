@@ -1,7 +1,8 @@
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Error from "../../../Error";
 // import Selector from "./Selector";
-
 
 // Create a custom theme with the desired colors
 const theme = createTheme({
@@ -39,57 +40,81 @@ function DashboardAccess() {
   const [password, setPassword] = useState("");
   const [accessHours, setAccessHours] = useState("");
 
+  const navigate = useNavigate()
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Log the data before saving to chrome.storage.local
-    console.log("Submitted data:");
-    console.log("Site URL:", siteUrl);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Access Hours:", accessHours);
-
-    // Check if any of the data fields are empty, undefined, or null
-    if (siteUrl === "" || email === "" || password === "" || accessHours === "") {
-      console.error("Data saving error: Some fields are empty or undefined.");
-      return;
-    }
-
-    // eslint-disable-next-line no-undef
-    chrome.storage.local.set({ siteUrl, email, password, accessHours }, function () {
-      // eslint-disable-next-line no-undef
-      if (chrome.runtime.lastError) {
-        // eslint-disable-next-line no-undef
-        console.error("Data sending error:", chrome.runtime.lastError.message);
-      } else {
-        console.log("Data saved to chrome.storage.local:");
-        console.log(JSON.stringify({ siteUrl, email, password, accessHours }, null, 2));
-
-        // eslint-disable-next-line no-undef
-        chrome.storage.local.get(
-          ["siteUrl", "email", "password", "accessHours"],
-          function (result) {
-            const savedSiteUrl = result.siteUrl || "";
-            const savedEmail = result.email || "";
-            const savedPassword = result.password || "";
-            const savedAccessHours = result.accessHours || "";
-
-            // Compare the saved data with the original input values
-            if (
-              savedSiteUrl === siteUrl &&
-              savedEmail === email &&
-              savedPassword === password &&
-              savedAccessHours === accessHours
-            ) {
-              console.log("Data saved correctly.");
-            } else {
-              console.error("Data saving error: Data mismatch.");
-            }
-          }
-        );
-      }
-    });
+    
+    let expiration = getExpirationInDay(accessHours)
+    generateToken(siteUrl, email, password, expiration)
   };
+
+  function generateToken(siteUrl, username, password, expiration) {
+    let formdata = new FormData();
+    formdata.append("username", username);
+    formdata.append("password", password);
+    formdata.append("expiration", expiration);
+
+
+    let requestOptions = {
+      method: "POST",
+      body: formdata,
+    };
+    
+    fetch(`${siteUrl}/wp-json/login-me-now/generate`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (
+          typeof result !== "undefined" &&
+          typeof result.data !== "undefined" &&
+          typeof result.data.status !== "undefined"
+        ) {
+          console.log("error");
+          return;
+        }
+
+        let unique = Date.now();
+        // eslint-disable-next-line no-undef
+        chrome.storage.local.get("loginMeNowTokens", function (data) {
+          let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
+          console.log(tokens)
+          tokens[unique] = result;
+          // eslint-disable-next-line no-undef
+          chrome.storage.local.set({ loginMeNowTokens: tokens });
+          navigate("/")
+          console.log("success");
+        });
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  }
+
+  function getExpirationInDay(expiration) {
+    let day = 7;
+    switch (expiration) {
+      case "lifetime":
+        day = 1000;
+        break;
+      case "year":
+        day = 365;
+        break;
+      case "month":
+        day = 31;
+        break;
+      case "week":
+        day = 7;
+        break;
+      case "day":
+        day = 1;
+        break;
+      default:
+        day = 7;
+        break;
+    }
+  
+    return day;
+  }
 
   // Event handler for TextField onChange
   const handleSiteUrlChange = (e) => {
@@ -103,7 +128,7 @@ function DashboardAccess() {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  
+
   const handleAccessHoursChange = (e) => {
     setAccessHours(e.target.value);
   };
@@ -148,10 +173,15 @@ function DashboardAccess() {
             onChange={handlePasswordChange}
           />
 
-          <select classNames="w-full" onChange={handleAccessHoursChange} name="accessHours">
-            <option value="option1">Mridul</option>
-            <option value="option2">Hosen</option>
-            <option value="option3">Kibria</option>
+          <select
+            classNames="w-full"
+            onChange={handleAccessHoursChange}
+            name="accessHours"
+          >
+            <option value="day">1 Day</option>
+            <option value="week">1 Week</option>
+            <option value="month">1 Month</option>
+            <option value="year">1 Year</option>
           </select>
 
           <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
