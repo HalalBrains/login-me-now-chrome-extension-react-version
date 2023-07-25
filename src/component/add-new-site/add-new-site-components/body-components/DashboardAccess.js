@@ -1,7 +1,8 @@
-import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import React, { useState } from "react";
+import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import Selector from "./Selector";
+import Selector from "./Selector";
+import Error from "../../../Error";
 
 // Create a custom theme with the desired colors
 const theme = createTheme({
@@ -38,14 +39,15 @@ function DashboardAccess() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [accessHours, setAccessHours] = useState("");
+  const [error, setError] = useState(false); // State to handle errors
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    let expiration = getExpirationInDay(accessHours)
-    generateToken(siteUrl, email, password, expiration)
+
+    let expiration = getExpirationInDay(accessHours);
+    generateToken(siteUrl, email, password, expiration);
   };
 
   function generateToken(siteUrl, username, password, expiration) {
@@ -54,14 +56,19 @@ function DashboardAccess() {
     formdata.append("password", password);
     formdata.append("expiration", expiration);
 
-
     let requestOptions = {
       method: "POST",
       body: formdata,
     };
-    
+
     fetch(`${siteUrl}/wp-json/login-me-now/generate`, requestOptions)
-      .then((response) => response.json())
+      .then((response) => {
+        // Check if the response status is OK, otherwise, throw an error
+        if (!response.ok) {
+          throw new Error("Invalid URL or password");
+        }
+        return response.json();
+      })
       .then((result) => {
         if (
           typeof result !== "undefined" &&
@@ -76,16 +83,16 @@ function DashboardAccess() {
         // eslint-disable-next-line no-undef
         chrome.storage.local.get("loginMeNowTokens", function (data) {
           let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-          console.log(tokens)
           tokens[unique] = result;
           // eslint-disable-next-line no-undef
           chrome.storage.local.set({ loginMeNowTokens: tokens });
-          navigate("/")
-          console.log("success");
+          navigate("/");
         });
       })
       .catch((error) => {
         console.log("Error", error);
+        // Show the Error component
+        setError(true);
       });
   }
 
@@ -111,11 +118,9 @@ function DashboardAccess() {
         day = 7;
         break;
     }
-  
+
     return day;
   }
-
-    
 
   // Event handler for TextField onChange
   const handleSiteUrlChange = (e) => {
@@ -174,16 +179,13 @@ function DashboardAccess() {
             onChange={handlePasswordChange}
           />
 
-          <select
+          <Selector
             classNames="w-full"
-            onChange={handleAccessHoursChange}
+            handleAccessHoursChange={handleAccessHoursChange}
             name="accessHours"
-          >
-            <option value="day">1 Day</option>
-            <option value="week">1 Week</option>
-            <option value="month">1 Month</option>
-            <option value="year">1 Year</option>
-          </select>
+            accessHours={accessHours}
+            setAccessHours={setAccessHours}
+          />
 
           <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
             Login
@@ -193,6 +195,7 @@ function DashboardAccess() {
           This extension does not store any login data of your website.
         </p>
       </div>
+      {error && <Error severity="error" content="Something Went Wrong!"/>}
     </ThemeProvider>
   );
 }

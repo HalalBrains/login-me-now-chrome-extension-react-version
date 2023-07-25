@@ -4,7 +4,7 @@
 .MuiFormControl-root.MuiTextField-root.w-full.margin-b-2.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
   z-index: 9;
 }
-label.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.Mui-focused.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-outlined.css-uiigua-MuiFormLabel-root-MuiInputLabel-root {
+label#demo-simple-select-label{
   padding: 0px 10px;
   background: white;
 }

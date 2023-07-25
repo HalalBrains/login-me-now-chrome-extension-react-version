@@ -4,9 +4,13 @@ import { Tooltip } from "@mui/material";
 
 function AddNewSite({ classNames }) {
   return (
-        <Tooltip title="Add New">
-          <AddIcon fontSize="large" className={classNames} style={{color:"#005E54"}}/>
-        </Tooltip>
+    <Tooltip title="Add New">
+      <AddIcon
+        fontSize="large"
+        className={classNames}
+        style={{ color: "#005E54" }}
+      />
+    </Tooltip>
   );
 }
 
