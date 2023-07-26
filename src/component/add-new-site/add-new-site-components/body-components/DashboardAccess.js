@@ -90,8 +90,6 @@ function DashboardAccess() {
         });
       })
       .catch((error) => {
-        console.log("Error", error);
-        // Show the Error component
         setError(true);
       });
   }
@@ -195,7 +193,7 @@ function DashboardAccess() {
           This extension does not store any login data of your website.
         </p>
       </div>
-      {error && <Error severity="error" content="Something Went Wrong!"/>}
+      {error && <Error severity="error" content="Something Went Wrong!" />}
     </ThemeProvider>
   );
 }
