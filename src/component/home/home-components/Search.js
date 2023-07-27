@@ -41,6 +41,7 @@ export default function Search({ classNames, handleSearchChange }) {
           type: "search",
         }}
         onChange={handleSearchChange}
+        autoFocus
       />
     </ThemeProvider>
   );

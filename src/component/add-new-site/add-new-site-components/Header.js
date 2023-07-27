@@ -9,7 +9,7 @@ function Header() {
       <h1 className="text-[22px] font-semibold text-[#00231F]">Add New Site</h1>
       <Link to="/">
         <Tooltip title="Go to Dashboard">
-          <ArrowBackIcon fontSize="large" style={{ color: "#00231F" }} />
+          <ArrowBackIcon fontSize="large" style={{ color: "#005E54" }} />
         </Tooltip>
       </Link>
     </div>
