@@ -13,6 +13,7 @@ import { Tooltip } from "@mui/material";
 import defaultLogo from "../../../assets/images/wordpress.png";
 import Modal from "@mui/material/Modal";
 import trash from "../../../assets/images/trash.png";
+import { Link } from "react-router-dom";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -52,18 +53,6 @@ export default function LoggedInSites({ searchQuery }) {
     return <div>Loading...</div>;
   }
 
-  const myData = Object.values(tokens);
-  const filteredData = myData.filter((item) => {
-    const displayName = item.user_display_name
-      ? item.user_display_name.toLowerCase()
-      : "";
-    const siteUrl = item.site_url ? item.site_url.toLowerCase() : "";
-
-    return (
-      displayName.includes(searchQuery.toLowerCase()) ||
-      siteUrl.includes(searchQuery.toLowerCase())
-    );
-  });
   
 
   function drop(key) {
@@ -93,8 +82,26 @@ export default function LoggedInSites({ searchQuery }) {
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={() => drop(key)}
+              onClick={handleOpen}
             >
+              <div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="rounded-[8px]">
+          <div className="flex justify-center"><img src={trash} alt="" /></div>
+          <h1 className="text-center text-[#000000] font-bold my-4 text-[17px]">Are you sure you want to delete your account?</h1>
+          <div className="flex justify-around">
+            <button className="bg-[#d11a2a] hover:bg-[#ac0412] text-white font-bold py-2 px-4 rounded" onClick={() => drop(key)}>Yes, Delete</button>
+            <button className="bg-[#28a745] hover:bg-[#218838] text-white font-bold py-2 px-4 rounded" onClick={handleClose}>No, Cancel</button>
+          </div>
+        </Box>
+      </Modal>
+    </div>
+
               <DeleteIcon className="text-[#005E54] hover:text-[#d11a2a]" />
             </IconButton>
           </Tooltip>
@@ -117,10 +124,11 @@ export default function LoggedInSites({ searchQuery }) {
 
   return (
     <>
-      <Box className="w-full px-2">
+      <Box className={`w-full px-2 h-[450px] ${listItems.length === 0 && "flex justify-center items-center "}`}>
         <Grid>
           <Demo>
             <List dense={dense}>
+            {listItems.length === 0 && <div className="text-center"><p>No Website Found</p><Link to="/add-new-site"><button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">Add New Site</button></Link></div>}
               {listItems}
             </List>
           </Demo>
