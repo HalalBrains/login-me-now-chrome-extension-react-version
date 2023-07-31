@@ -33,16 +33,15 @@ export default function LoggedInSites({ searchQuery }) {
   const [dense] = useState(false);
   const [tokens, setTokens] = useState({});
   const [open, setOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState(null); 
+  const [selectedKey, setSelectedKey] = useState(null);
 
   const handleOpen = (key) => {
     setOpen(true);
-    setSelectedKey(key); 
+    setSelectedKey(key);
   };
   const handleClose = () => setOpen(false);
 
-  console.log(searchQuery)
-
+  console.log(searchQuery);
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -71,29 +70,44 @@ export default function LoggedInSites({ searchQuery }) {
   const entries = Object.entries(tokens);
 
   const listItems = [];
-for (const [key, value] of entries) {
-  // Check if searchQuery is an empty string or if it matches the user_display_name
-  if (searchQuery.toLowerCase() === '' || value.user_display_name.toLowerCase().includes(searchQuery) || value.site_url.toLowerCase().includes(searchQuery)) {
-    listItems.push(
-      <ListItem key={key} secondaryAction={
-          <IconButton edge="end" aria-label="delete" onClick={() => handleOpen(key)}>
-            <DeleteIcon className="text-[#005E54] hover:text-[#d11a2a]" />
+  for (const [key, value] of entries) {
+    if (
+      searchQuery.toLowerCase() === "" ||
+      value.user_display_name.toLowerCase().includes(searchQuery) ||
+      value.site_url.toLowerCase().includes(searchQuery)
+    ) {
+      listItems.push(
+        <ListItem
+          key={key}
+          secondaryAction={
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => handleOpen(key)}
+            >
+              <DeleteIcon className="text-[#005E54] hover:text-[#d11a2a]" />
             </IconButton>
-        }
-      >
-        <ListItemAvatar>
-          <Avatar
-            src={value.site_icon_url === "" || value.site_icon_url === null || value.site_icon_url === undefined ? defaultLogo : value.site_icon_url}
+          }
+        >
+          <ListItemAvatar>
+            <Avatar
+              src={
+                value.site_icon_url === "" ||
+                value.site_icon_url === null ||
+                value.site_icon_url === undefined
+                  ? defaultLogo
+                  : value.site_icon_url
+              }
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary={value.user_display_name}
+            secondary={value.site_url}
           />
-        </ListItemAvatar>
-        <ListItemText
-          primary={value.user_display_name}
-          secondary={value.site_url}
-        />
-      </ListItem>
-    );
+        </ListItem>
+      );
+    }
   }
-}
 
   return (
     <>
