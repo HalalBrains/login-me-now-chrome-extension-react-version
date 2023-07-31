@@ -41,6 +41,7 @@ export default function LoggedInSites({ searchQuery }) {
   };
   const handleClose = () => setOpen(false);
 
+  console.log(searchQuery)
 
 
   useEffect(() => {
@@ -48,7 +49,6 @@ export default function LoggedInSites({ searchQuery }) {
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
       setTokens(tokens);
-      console.log(tokens);
     });
   }, []);
 
@@ -71,7 +71,9 @@ export default function LoggedInSites({ searchQuery }) {
   const entries = Object.entries(tokens);
 
   const listItems = [];
-  for (const [key, value] of entries) {
+for (const [key, value] of entries) {
+  // Check if searchQuery is an empty string or if it matches the user_display_name
+  if (searchQuery.toLowerCase() === '' || value.user_display_name.toLowerCase().includes(searchQuery) || value.site_url.toLowerCase().includes(searchQuery)) {
     listItems.push(
       <ListItem key={key} secondaryAction={
           <IconButton edge="end" aria-label="delete" onClick={() => handleOpen(key)}>
@@ -91,6 +93,7 @@ export default function LoggedInSites({ searchQuery }) {
       </ListItem>
     );
   }
+}
 
   return (
     <>
