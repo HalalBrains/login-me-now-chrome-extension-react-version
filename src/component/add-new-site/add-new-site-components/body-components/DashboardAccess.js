@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Selector from "./Selector";
 import Error from "../../../Error";
 
-// Create a custom theme with the desired colors
 const theme = createTheme({
   components: {
     MuiOutlinedInput: {
@@ -64,7 +63,6 @@ function DashboardAccess() {
 
     fetch(`${siteUrl}/wp-json/login-me-now/generate`, requestOptions)
       .then((response) => {
-        // Check if the response status is OK, otherwise, throw an error
         if (!response.ok) {
           throw new Error("Invalid URL or password");
         }
