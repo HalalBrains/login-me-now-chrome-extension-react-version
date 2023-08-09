@@ -67,6 +67,10 @@ export default function LoggedInSites({ searchQuery }) {
 
   const entries = Object.entries(tokens);
 
+  const currentDatetime = new Date();
+const timestamp = currentDatetime.getTime() / 1000;
+const roundedTimeStamp = Math.floor(timestamp)
+
   const listItems = [];
   for (const [key, value] of entries) {
     // expire date code start from here
@@ -90,6 +94,7 @@ export default function LoggedInSites({ searchQuery }) {
       listItems.push(
         <ListItem
           key={key}
+          className={roundedTimeStamp >=expiredDate ? `bg-red-300 rounded-[4px]` : `hover:bg-[#f5f5f5] hover:rounded-[4px] border-[#f5f5f5] border-b-[1px]`}
           secondaryAction={
             <IconButton
               edge="end"
