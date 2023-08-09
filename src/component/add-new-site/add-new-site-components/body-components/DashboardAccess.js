@@ -157,7 +157,7 @@ function DashboardAccess() {
 
           <TextField
             name="accessHours"
-            className="w-full text-[#00000099]"
+            className="w-full"
             accessHours={accessHours}
             setAccessHours={setAccessHours}
             onChange={handleAccessHoursChange}
