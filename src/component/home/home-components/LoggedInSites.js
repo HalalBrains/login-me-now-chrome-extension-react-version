@@ -13,6 +13,7 @@ import defaultLogo from "../../../assets/images/wordpress.png";
 import Modal from "@mui/material/Modal";
 import trash from "../../../assets/images/trash.png";
 import { Link } from "react-router-dom";
+import jwt from "jwt-decode";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -41,8 +42,6 @@ export default function LoggedInSites({ searchQuery }) {
   };
   const handleClose = () => setOpen(false);
 
-  console.log(searchQuery);
-
   useEffect(() => {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
@@ -59,7 +58,6 @@ export default function LoggedInSites({ searchQuery }) {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-      console.log(tokens[key], tokens.key);
       delete tokens[key];
       setTokens(tokens);
       // eslint-disable-next-line no-undef
@@ -71,6 +69,19 @@ export default function LoggedInSites({ searchQuery }) {
 
   const listItems = [];
   for (const [key, value] of entries) {
+    // expire date code start from here
+    const decodedToken = jwt(value.token);
+    const expiredDate = decodedToken.exp;
+    const formattedExpiredDate = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    }).format(new Date(expiredDate * 1000));
+
+    // expire date code end from here
+
     if (
       searchQuery.toLowerCase() === "" ||
       value.user_display_name.toLowerCase().includes(searchQuery) ||
@@ -102,7 +113,7 @@ export default function LoggedInSites({ searchQuery }) {
           </ListItemAvatar>
           <ListItemText
             primary={value.user_display_name}
-            secondary={value.site_url}
+            secondary={<>{value.site_url}<h1 className="text-[14px] font-bold">{`exp: ${formattedExpiredDate}`}</h1></>}
           />
         </ListItem>
       );

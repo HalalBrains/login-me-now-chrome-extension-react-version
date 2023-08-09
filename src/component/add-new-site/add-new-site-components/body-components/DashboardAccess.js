@@ -46,7 +46,6 @@ function DashboardAccess() {
     e.preventDefault();
 
     let expiration = getExpirationInDay(accessHours);
-    console.log(accessHours, expiration)
     generateToken(siteUrl, email, password, expiration);
   };
 

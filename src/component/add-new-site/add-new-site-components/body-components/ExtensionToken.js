@@ -20,7 +20,7 @@ function ExtensionToken() {
 
     // Fetch operation
     const data = jwt(extensionToken);
-    console.log(data);
+    
 
     const link = data.iss;
 
