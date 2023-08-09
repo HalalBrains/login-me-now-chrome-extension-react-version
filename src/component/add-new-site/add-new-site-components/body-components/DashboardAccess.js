@@ -43,7 +43,7 @@ function DashboardAccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const accessHoursTimeStamp = accessHours
+    const accessHoursTimeStamp = accessHours;
     const expiration = new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "numeric",
@@ -157,7 +157,7 @@ function DashboardAccess() {
 
           <TextField
             name="accessHours"
-            className="w-full"
+            className="w-full text-[#00000099]"
             accessHours={accessHours}
             setAccessHours={setAccessHours}
             onChange={handleAccessHoursChange}
