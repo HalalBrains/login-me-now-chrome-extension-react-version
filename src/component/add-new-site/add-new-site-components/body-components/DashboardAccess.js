@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Selector from "./Selector";
 import Error from "../../../Error";
 
 const theme = createTheme({
@@ -44,8 +43,15 @@ function DashboardAccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const accessHoursTimeStamp = accessHours
+    const expiration = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    }).format(new Date(accessHoursTimeStamp / 1000));
 
-    let expiration = getExpirationInDay(accessHours);
     generateToken(siteUrl, email, password, expiration);
   };
 
@@ -90,32 +96,6 @@ function DashboardAccess() {
       .catch((error) => {
         setError(true);
       });
-  }
-
-  function getExpirationInDay(expiration) {
-    let day = 7;
-    switch (expiration) {
-      case "lifetime":
-        day = 1000;
-        break;
-      case "year":
-        day = 365;
-        break;
-      case "month":
-        day = 31;
-        break;
-      case "week":
-        day = 7;
-        break;
-      case "day":
-        day = 1;
-        break;
-      default:
-        day = 7;
-        break;
-    }
-
-    return day;
   }
 
   // Event handler for TextField onChange
@@ -175,12 +155,15 @@ function DashboardAccess() {
             onChange={handlePasswordChange}
           />
 
-          <Selector
-            classNames="w-full"
-            handleAccessHoursChange={handleAccessHoursChange}
+          <TextField
             name="accessHours"
+            className="w-full"
             accessHours={accessHours}
             setAccessHours={setAccessHours}
+            onChange={handleAccessHoursChange}
+            InputProps={{
+              type: "datetime-local",
+            }}
           />
 
           <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
