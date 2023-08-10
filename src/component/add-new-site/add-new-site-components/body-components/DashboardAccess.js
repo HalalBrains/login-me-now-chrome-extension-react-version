@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Error from "../../../Error";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme({
   components: {
@@ -37,23 +39,18 @@ function DashboardAccess() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [accessHours, setAccessHours] = useState("");
-  const [error, setError] = useState(false); // State to handle errors
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const accessHoursTimeStamp = accessHours;
-    const expiration = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    }).format(new Date(accessHoursTimeStamp / 1000));
+    const expiration = accessHours;
 
     generateToken(siteUrl, email, password, expiration);
   };
+
+  console.log(accessHours)
 
   function generateToken(siteUrl, username, password, expiration) {
     let formdata = new FormData();
@@ -90,11 +87,12 @@ function DashboardAccess() {
           tokens[unique] = result;
           // eslint-disable-next-line no-undef
           chrome.storage.local.set({ loginMeNowTokens: tokens });
-          navigate("/");
+          setError(false);
+          navigate("/", { state: { success: true } });
         });
       })
       .catch((error) => {
-        setError(true);
+          setError(true);
       });
   }
 
@@ -116,6 +114,7 @@ function DashboardAccess() {
   };
 
   return (
+    <>
     <ThemeProvider theme={theme}>
       <div className="mt-5">
         <form onSubmit={handleSubmit}>
@@ -174,8 +173,20 @@ function DashboardAccess() {
           This extension does not store any login data of your website.
         </p>
       </div>
-      {error && <Error severity="error" content="Something Went Wrong!" />}
     </ThemeProvider>
+    
+    {error === false ? "" :
+        toast.error('There was an error!', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          })}
+      <ToastContainer /></>
   );
 }
 
