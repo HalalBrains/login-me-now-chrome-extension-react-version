@@ -33,6 +33,7 @@ export default function LoggedInSites({ searchQuery }) {
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
   const [isDeleted, setIssDeleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   const handleOpen = (key) => {
@@ -67,6 +68,7 @@ export default function LoggedInSites({ searchQuery }) {
   }
 
   const handleLoginToWebsite = (key) => {
+    setIsLoading((prevState) => ({ ...prevState, [key]: true }));
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens;
@@ -84,6 +86,7 @@ export default function LoggedInSites({ searchQuery }) {
       )
         .then((response) => response.json())
         .then((result) => {
+          setIsLoading((prevState) => ({ ...prevState, [key]: false }));
           if (typeof result.data.status !== "undefined") {
             let message = `Something wen't wrong!`;
             // eslint-disable-next-line default-case
@@ -113,7 +116,7 @@ export default function LoggedInSites({ searchQuery }) {
         })
         .catch((error) => {
           console.log("error", error);
-          // selectedCard.classList.remove("validating");
+          setIsLoading((prevState) => ({ ...prevState, [key]: false }));
         });
     });
   };
@@ -126,11 +129,8 @@ export default function LoggedInSites({ searchQuery }) {
 
   const listItems = [];
   for (const [key, value] of entries) {
-    // expire date code start from here
     const decodedToken = jwt(value.token);
     const expiredDate = decodedToken.exp;
-
-    // expire date code end from here
 
     if (
       searchQuery.toLowerCase() === "" ||
@@ -138,45 +138,53 @@ export default function LoggedInSites({ searchQuery }) {
       value.site_url.toLowerCase().includes(searchQuery)
     ) {
       listItems.push(
-        <div
-          className={
-            roundedTimeStamp >= expiredDate
-              ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
-              : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
-          }
-        >
-          <div
-            className="flex items-center w-full py-3 pl-5"
-            onClick={() => handleLoginToWebsite(key)}
-          >
-            <img
-              src={
-                value.site_icon_url === "" ||
-                value.site_icon_url === null ||
-                value.site_icon_url === undefined
-                  ? defaultLogo
-                  : value.site_icon_url
-              }
-              alt=""
-              className="h-10 w-10 rounded-full inline-block"
-            />
-            <div className="pl-4">
-              <h1 className="text-[16px] font-medium">
-                {value.user_display_name}
-              </h1>
-              <h6>{value.site_url}</h6>
+        isLoading[key] ? (
+          <div className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
+            <div class="stage">
+              <div class="dot-pulse"></div>
             </div>
           </div>
-
-          <Tooltip title="Delete" placement="left">
+        ) : (
+          <div
+            className={
+              roundedTimeStamp >= expiredDate
+                ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+                : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+            }
+            key={key}
+          >
             <div
-              onClick={() => handleOpen(key)}
-              className="w-[4.75rem] flex justify-center items-center h-[66px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+              className="flex items-center w-full py-3 pl-5"
+              onClick={() => handleLoginToWebsite(key)}
             >
-              <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
+              <img
+                src={
+                  value.site_icon_url === "" ||
+                  value.site_icon_url === null ||
+                  value.site_icon_url === undefined
+                    ? defaultLogo
+                    : value.site_icon_url
+                }
+                alt=""
+                className="h-10 w-10 rounded-full inline-block"
+              />
+              <div className="pl-4">
+                <h1 className="text-[16px] font-medium">
+                  {value.user_display_name}
+                </h1>
+                <h6>{value.site_url}</h6>
+              </div>
             </div>
-          </Tooltip>
-        </div>
+            <Tooltip title="Delete" placement="left">
+              <div
+                onClick={() => handleOpen(key)}
+                className="w-[4.75rem] flex justify-center items-center h-[66px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+              >
+                <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
+              </div>
+            </Tooltip>
+          </div>
+        )
       );
     }
   }
