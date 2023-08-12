@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Selector from "./Selector";
 import Error from "../../../Error";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// Create a custom theme with the desired colors
 const theme = createTheme({
   components: {
     MuiOutlinedInput: {
@@ -39,15 +39,14 @@ function DashboardAccess() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [accessHours, setAccessHours] = useState("");
-  const [error, setError] = useState(false); // State to handle errors
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const expiration = accessHours;
 
-    let expiration = getExpirationInDay(accessHours);
-    console.log(accessHours, expiration)
     generateToken(siteUrl, email, password, expiration);
   };
 
@@ -64,7 +63,6 @@ function DashboardAccess() {
 
     fetch(`${siteUrl}/wp-json/login-me-now/generate`, requestOptions)
       .then((response) => {
-        // Check if the response status is OK, otherwise, throw an error
         if (!response.ok) {
           throw new Error("Invalid URL or password");
         }
@@ -87,38 +85,14 @@ function DashboardAccess() {
           tokens[unique] = result;
           // eslint-disable-next-line no-undef
           chrome.storage.local.set({ loginMeNowTokens: tokens });
-          navigate("/");
+          setError(false);
+          navigate("/", { state: { success: true } });
         });
       })
       .catch((error) => {
         setError(true);
+        console.log("rerendered");
       });
-  }
-
-  function getExpirationInDay(expiration) {
-    let day = 7;
-    switch (expiration) {
-      case "lifetime":
-        day = 1000;
-        break;
-      case "year":
-        day = 365;
-        break;
-      case "month":
-        day = 31;
-        break;
-      case "week":
-        day = 7;
-        break;
-      case "day":
-        day = 1;
-        break;
-      default:
-        day = 7;
-        break;
-    }
-
-    return day;
   }
 
   // Event handler for TextField onChange
@@ -139,63 +113,85 @@ function DashboardAccess() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="mt-5">
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="siteUrl"
-            className="w-full margin-b-2"
-            label="Site URL"
-            placeholder="https://example.com"
-            InputProps={{
-              type: "text",
-            }}
-            value={siteUrl}
-            onChange={handleSiteUrlChange}
-          />
+    <>
+      <ThemeProvider theme={theme}>
+        <div className="mt-5">
+          <form onSubmit={handleSubmit}>
+            <TextField
+              name="siteUrl"
+              className="w-full margin-b-2"
+              label="Site URL"
+              placeholder="https://example.com"
+              InputProps={{
+                type: "text",
+              }}
+              value={siteUrl}
+              onChange={handleSiteUrlChange}
+            />
 
-          <TextField
-            name="email"
-            className="w-full margin-b-2"
-            label="Username/Email"
-            placeholder="example@email.com"
-            InputProps={{
-              type: "text",
-            }}
-            value={email}
-            onChange={handleEmailChange}
-          />
+            <TextField
+              name="email"
+              className="w-full margin-b-2"
+              label="Username/Email"
+              placeholder="example@email.com"
+              InputProps={{
+                type: "text",
+              }}
+              value={email}
+              onChange={handleEmailChange}
+            />
 
-          <TextField
-            name="password"
-            className="w-full margin-b-2"
-            label="Password"
-            placeholder="********"
-            InputProps={{
-              type: "password",
-            }}
-            value={password}
-            onChange={handlePasswordChange}
-          />
+            <TextField
+              name="password"
+              className="w-full margin-b-2"
+              label="Password"
+              placeholder="********"
+              InputProps={{
+                type: "password",
+              }}
+              value={password}
+              onChange={handlePasswordChange}
+            />
 
-          <Selector
-            classNames="w-full"
-            handleAccessHoursChange={handleAccessHoursChange}
-            name="accessHours"
-            accessHours={accessHours}
-            setAccessHours={setAccessHours}
-          />
+            <TextField
+              name="accessHours"
+              className="w-full"
+              accessHours={accessHours}
+              setAccessHours={setAccessHours}
+              onChange={handleAccessHoursChange}
+              InputProps={{
+                type: "datetime-local",
+              }}
+            />
 
-          <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
-            Login
-          </button>
-        </form>
-        <p className="text-center text-[12px] mt-2 text-gray-500">
-          This extension does not store any login data of your website.
-        </p>
-      </div>
-      {error && <Error severity="error" content="Something Went Wrong!" />}
-    </ThemeProvider>
+            <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
+              Login
+            </button>
+          </form>
+          <p className="text-center text-[12px] mt-2 text-gray-500">
+            This extension does not store any login data of your website.
+          </p>
+        </div>
+      </ThemeProvider>
+
+      {useEffect(() => {
+        if (error) {
+          toast.error("There was an error!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          setError(false);
+        }
+      }, [error])}
+      <ToastContainer />
+    </>
   );
 }
 

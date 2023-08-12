@@ -9,6 +9,10 @@
     "default_popup": "index.html",
     "default_title": "Login Me Now"
   },
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline';"
   },
