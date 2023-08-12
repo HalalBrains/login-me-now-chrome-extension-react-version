@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Error from "../../../Error";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -40,13 +39,14 @@ function DashboardAccess() {
   const [password, setPassword] = useState("");
   const [accessHours, setAccessHours] = useState("");
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const expiration = accessHours;
-
+    setIsLoading(true);
     generateToken(siteUrl, email, password, expiration);
   };
 
@@ -85,11 +85,13 @@ function DashboardAccess() {
           tokens[unique] = result;
           // eslint-disable-next-line no-undef
           chrome.storage.local.set({ loginMeNowTokens: tokens });
+          setIsLoading(false);
           setError(false);
           navigate("/", { state: { success: true } });
         });
       })
       .catch((error) => {
+        setIsLoading(false);
         setError(true);
         console.log("rerendered");
       });
@@ -165,7 +167,7 @@ function DashboardAccess() {
             />
 
             <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
-              Login
+              {isLoading ? "Loading..." : "Login"}
             </button>
           </form>
           <p className="text-center text-[12px] mt-2 text-gray-500">
@@ -176,7 +178,7 @@ function DashboardAccess() {
 
       {useEffect(() => {
         if (error) {
-          toast.error("There was an error!", {
+          toast.error("There was an error !", {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,

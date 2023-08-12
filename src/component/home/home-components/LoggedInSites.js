@@ -32,6 +32,7 @@ export default function LoggedInSites({ searchQuery }) {
   const [tokens, setTokens] = useState({});
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
+  const [isDeleted, setIssDeleted] = useState(false);
   const location = useLocation();
   console.log(location.state);
 
@@ -60,7 +61,9 @@ export default function LoggedInSites({ searchQuery }) {
       delete tokens[key];
       setTokens(tokens);
       // eslint-disable-next-line no-undef
-      chrome.storage.local.set({ loginMeNowTokens: tokens }, function () {});
+      chrome.storage.local.set({ loginMeNowTokens: tokens }, function () {
+        setIssDeleted(true);
+      });
     });
   }
 
@@ -240,11 +243,32 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
+
+      {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
+          if (isDeleted) {
+            toast.success("Deleted Successfully !", {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            setIssDeleted(false);
+          }
+        }, [isDeleted])
+      }
+
       {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (location.state && location.state.success === true) {
-            toast.success("Saved Successfully", {
+            toast.success("Saved Successfully !", {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
