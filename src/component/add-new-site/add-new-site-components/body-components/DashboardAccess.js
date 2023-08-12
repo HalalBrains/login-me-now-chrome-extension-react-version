@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Error from "../../../Error";
@@ -50,8 +50,6 @@ function DashboardAccess() {
     generateToken(siteUrl, email, password, expiration);
   };
 
-  console.log(accessHours)
-
   function generateToken(siteUrl, username, password, expiration) {
     let formdata = new FormData();
     formdata.append("username", username);
@@ -93,6 +91,7 @@ function DashboardAccess() {
       })
       .catch((error) => {
           setError(true);
+          console.log("rerendered")
       });
   }
 
@@ -109,9 +108,9 @@ function DashboardAccess() {
     setPassword(e.target.value);
   };
 
-  const handleAccessHoursChange = (e) => {
+  const handleAccessHoursChange =(e) => {
     setAccessHours(e.target.value);
-  };
+  }
 
   return (
     <>
@@ -175,17 +174,22 @@ function DashboardAccess() {
       </div>
     </ThemeProvider>
     
-    {error === false ? "" :
-        toast.error('There was an error!', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          })}
+    {useEffect(() => {
+    if (error) {
+      toast.error('There was an error!', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setError(false); 
+    }
+  }, [error])}
       <ToastContainer /></>
   );
 }

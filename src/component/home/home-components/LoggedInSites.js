@@ -240,20 +240,22 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
-      {location.state && location.state.success === true ? (
-        toast.success('Saved Successfully', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        })
-      ) : (
-        ""
-      )}
+      {// eslint-disable-next-line react-hooks/rules-of-hooks
+      useEffect(() => {
+    if (location.state && location.state.success === true) {
+      toast.success('Saved Successfully', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }, [location.state])}
+      
       <ToastContainer />
     </>
   );
