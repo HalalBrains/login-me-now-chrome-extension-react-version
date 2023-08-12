@@ -3,7 +3,7 @@ import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Error from "../../../Error";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = createTheme({
   components: {
@@ -90,8 +90,8 @@ function DashboardAccess() {
         });
       })
       .catch((error) => {
-          setError(true);
-          console.log("rerendered")
+        setError(true);
+        console.log("rerendered");
       });
   }
 
@@ -108,89 +108,90 @@ function DashboardAccess() {
     setPassword(e.target.value);
   };
 
-  const handleAccessHoursChange =(e) => {
+  const handleAccessHoursChange = (e) => {
     setAccessHours(e.target.value);
-  }
+  };
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <div className="mt-5">
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="siteUrl"
-            className="w-full margin-b-2"
-            label="Site URL"
-            placeholder="https://example.com"
-            InputProps={{
-              type: "text",
-            }}
-            value={siteUrl}
-            onChange={handleSiteUrlChange}
-          />
+      <ThemeProvider theme={theme}>
+        <div className="mt-5">
+          <form onSubmit={handleSubmit}>
+            <TextField
+              name="siteUrl"
+              className="w-full margin-b-2"
+              label="Site URL"
+              placeholder="https://example.com"
+              InputProps={{
+                type: "text",
+              }}
+              value={siteUrl}
+              onChange={handleSiteUrlChange}
+            />
 
-          <TextField
-            name="email"
-            className="w-full margin-b-2"
-            label="Username/Email"
-            placeholder="example@email.com"
-            InputProps={{
-              type: "text",
-            }}
-            value={email}
-            onChange={handleEmailChange}
-          />
+            <TextField
+              name="email"
+              className="w-full margin-b-2"
+              label="Username/Email"
+              placeholder="example@email.com"
+              InputProps={{
+                type: "text",
+              }}
+              value={email}
+              onChange={handleEmailChange}
+            />
 
-          <TextField
-            name="password"
-            className="w-full margin-b-2"
-            label="Password"
-            placeholder="********"
-            InputProps={{
-              type: "password",
-            }}
-            value={password}
-            onChange={handlePasswordChange}
-          />
+            <TextField
+              name="password"
+              className="w-full margin-b-2"
+              label="Password"
+              placeholder="********"
+              InputProps={{
+                type: "password",
+              }}
+              value={password}
+              onChange={handlePasswordChange}
+            />
 
-          <TextField
-            name="accessHours"
-            className="w-full"
-            accessHours={accessHours}
-            setAccessHours={setAccessHours}
-            onChange={handleAccessHoursChange}
-            InputProps={{
-              type: "datetime-local",
-            }}
-          />
+            <TextField
+              name="accessHours"
+              className="w-full"
+              accessHours={accessHours}
+              setAccessHours={setAccessHours}
+              onChange={handleAccessHoursChange}
+              InputProps={{
+                type: "datetime-local",
+              }}
+            />
 
-          <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
-            Login
-          </button>
-        </form>
-        <p className="text-center text-[12px] mt-2 text-gray-500">
-          This extension does not store any login data of your website.
-        </p>
-      </div>
-    </ThemeProvider>
-    
-    {useEffect(() => {
-    if (error) {
-      toast.error('There was an error!', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+            <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
+              Login
+            </button>
+          </form>
+          <p className="text-center text-[12px] mt-2 text-gray-500">
+            This extension does not store any login data of your website.
+          </p>
+        </div>
+      </ThemeProvider>
 
-      setError(false); 
-    }
-  }, [error])}
-      <ToastContainer /></>
+      {useEffect(() => {
+        if (error) {
+          toast.error("There was an error!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          setError(false);
+        }
+      }, [error])}
+      <ToastContainer />
+    </>
   );
 }
 

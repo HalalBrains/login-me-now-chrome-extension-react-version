@@ -32,8 +32,8 @@ export default function LoggedInSites({ searchQuery }) {
   const [tokens, setTokens] = useState({});
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-  const location = useLocation()
-  console.log(location.state)
+  const location = useLocation();
+  console.log(location.state);
 
   const handleOpen = (key) => {
     setOpen(true);
@@ -240,22 +240,24 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
-      {// eslint-disable-next-line react-hooks/rules-of-hooks
-      useEffect(() => {
-    if (location.state && location.state.success === true) {
-      toast.success('Saved Successfully', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  }, [location.state])}
-      
+      {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
+          if (location.state && location.state.success === true) {
+            toast.success("Saved Successfully", {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        }, [location.state])
+      }
+
       <ToastContainer />
     </>
   );
