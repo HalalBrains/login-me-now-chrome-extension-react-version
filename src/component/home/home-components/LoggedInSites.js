@@ -139,7 +139,6 @@ export default function LoggedInSites({ searchQuery }) {
     ) {
       listItems.push(
         <div
-          key={key}
           className={
             roundedTimeStamp >= expiredDate
               ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
