@@ -34,7 +34,6 @@ export default function LoggedInSites({ searchQuery }) {
   const [selectedKey, setSelectedKey] = useState(null);
   const [isDeleted, setIssDeleted] = useState(false);
   const location = useLocation();
-  console.log(location.state);
 
   const handleOpen = (key) => {
     setOpen(true);
@@ -248,7 +247,7 @@ export default function LoggedInSites({ searchQuery }) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (isDeleted) {
-            toast.success("Deleted Successfully !", {
+            toast.success("Deleted Successfully!", {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
@@ -267,17 +266,29 @@ export default function LoggedInSites({ searchQuery }) {
       {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
-          if (location.state && location.state.success === true) {
-            toast.success("Saved Successfully !", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+          if (
+            (location.state && location.state.success === true) ||
+            (location.state && location.state.tokenSuccess === true)
+          ) {
+            toast.success(
+              `${
+                location.state && location.state.success === true
+                  ? "Saved Successfully!"
+                  : location.state && location.state.tokenSuccess === true
+                  ? "Token Saved Successfully!"
+                  : ""
+              }`,
+              {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
           }
         }, [location.state])
       }

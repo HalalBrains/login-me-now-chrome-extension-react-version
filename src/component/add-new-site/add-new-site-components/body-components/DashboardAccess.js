@@ -178,7 +178,7 @@ function DashboardAccess() {
 
       {useEffect(() => {
         if (error) {
-          toast.error("There was an error !", {
+          toast.error("There was an error!", {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
