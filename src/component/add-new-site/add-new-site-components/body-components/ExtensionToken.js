@@ -75,7 +75,7 @@ function ExtensionToken() {
     if (invalidToken) {
       toast.error("Token is invalid!", {
         position: "top-center",
-        autoClose: 2000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

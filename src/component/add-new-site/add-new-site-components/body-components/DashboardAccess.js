@@ -114,6 +114,17 @@ function DashboardAccess() {
     setAccessHours(e.target.value);
   };
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = `${now.getMonth() + 1}`.padStart(2, "0");
+    const day = `${now.getDate()}`.padStart(2, "0");
+    const hours = `${now.getHours()}`.padStart(2, "0");
+    const minutes = `${now.getMinutes()}`.padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -161,8 +172,10 @@ function DashboardAccess() {
               accessHours={accessHours}
               setAccessHours={setAccessHours}
               onChange={handleAccessHoursChange}
-              InputProps={{
-                type: "datetime-local",
+              required
+              type="datetime-local"
+              inputProps={{
+                min: getCurrentDateTime(),
               }}
             />
 
@@ -180,7 +193,7 @@ function DashboardAccess() {
         if (error) {
           toast.error("There was an error!", {
             position: "top-center",
-            autoClose: 2000,
+            autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,

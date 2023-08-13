@@ -256,7 +256,7 @@ export default function LoggedInSites({ searchQuery }) {
           if (isDeleted) {
             toast.success("Deleted Successfully!", {
               position: "top-center",
-              autoClose: 2000,
+              autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -287,7 +287,7 @@ export default function LoggedInSites({ searchQuery }) {
               }`,
               {
                 position: "top-center",
-                autoClose: 2000,
+                autoClose: 1000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
