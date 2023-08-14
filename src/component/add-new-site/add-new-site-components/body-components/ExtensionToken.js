@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
+import "react-toastify/dist/ReactToastify.css";
 
 function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
+  const [paused, setPaused] = useState(false);
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -52,16 +53,21 @@ function ExtensionToken() {
             return;
           }
 
-          let unique = Date.now();
-          // eslint-disable-next-line no-undef
-          chrome.storage.local.get("loginMeNowTokens", function (data) {
-            let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-            tokens[unique] = result;
+          if (result === "pause") {
+            setPaused(true);
+          } else {
+            let unique = Date.now();
+
             // eslint-disable-next-line no-undef
-            chrome.storage.local.set({ loginMeNowTokens: tokens });
-            console.log("success");
-            navigate("/", { state: { tokenSuccess: true } });
-          });
+            chrome.storage.local.get("loginMeNowTokens", function (data) {
+              let tokens = data.loginMeNowTokens || {};
+              tokens[unique] = result;
+
+              // eslint-disable-next-line no-undef
+              chrome.storage.local.set({ loginMeNowTokens: tokens });
+              navigate("/", { state: { tokenSuccess: true } });
+            });
+          }
         })
         .catch((error) => {
           console.log("error", error);
@@ -72,21 +78,25 @@ function ExtensionToken() {
   };
 
   useEffect(() => {
-    if (invalidToken) {
-      toast.error("Token is invalid!", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+    if (invalidToken || paused) {
+      toast.error(
+        `${invalidToken ? "Token is invalid!" : "Extension Token Is Paused!"}`,
+        {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
 
-      setInvalidToken(false); // Use setInvalidToken instead of invalidToken(false)
+      setInvalidToken(false);
+      setPaused(false);
     }
-  }, [invalidToken]);
+  }, [invalidToken, paused]);
 
   return (
     <>
