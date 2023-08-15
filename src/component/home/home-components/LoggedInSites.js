@@ -122,6 +122,7 @@ export default function LoggedInSites({ searchQuery }) {
   };
 
   const entries = Object.entries(tokens);
+  console.log(tokens);
 
   const currentDatetime = new Date();
   const timestamp = currentDatetime.getTime() / 1000;
@@ -129,7 +130,8 @@ export default function LoggedInSites({ searchQuery }) {
 
   const listItems = [];
   for (const [key, value] of entries) {
-    const decodedToken = jwt(value.token);
+    const decodedToken = jwt(value.token === undefined ? value : value.token);
+    console.log(decodedToken);
     const expiredDate = decodedToken.exp;
 
     if (
@@ -161,7 +163,11 @@ export default function LoggedInSites({ searchQuery }) {
                 src={
                   value.site_icon_url === "" ||
                   value.site_icon_url === null ||
-                  value.site_icon_url === undefined
+                  value.site_icon_url === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
                     ? defaultLogo
                     : value.site_icon_url
                 }
@@ -170,9 +176,27 @@ export default function LoggedInSites({ searchQuery }) {
               />
               <div className="pl-4">
                 <h1 className="text-[16px] font-medium">
-                  {value.user_display_name}
+                  {value.user_display_name === "" ||
+                  value.user_display_name === null ||
+                  value.user_display_name === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
+                    ? "Empty Name"
+                    : value.user_display_name}
                 </h1>
-                <h6>{value.site_url}</h6>
+                <h6>
+                  {value.site_url === "" ||
+                  value.site_url === null ||
+                  value.site_url === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
+                    ? "Empty Url"
+                    : value.site_url}
+                </h6>
               </div>
             </div>
             <Tooltip title="Delete" placement="left">
