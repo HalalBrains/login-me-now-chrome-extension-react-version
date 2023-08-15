@@ -13,7 +13,7 @@ function Home() {
 
   return (
     <>
-      <div className="p-6 flex items-center justify-between border-b">
+      <div className="py-6 pl-6 pr-3 flex items-center justify-between border-b">
         <Search classNames="w-full" handleSearchChange={handleSearchChange} />
         <Link to="/add-new-site">
           <AddNewSite classNames="" />
