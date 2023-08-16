@@ -216,7 +216,11 @@ export default function LoggedInSites({ searchQuery }) {
             key={key}
           >
             <div
-              className="flex items-center w-full py-3 pl-5 cursor-pointer"
+              className={` ${
+                roundedTimeStamp >= expiredDate
+                  ? "flex items-center w-full py-3 pl-5 pointer-events-none"
+                  : "flex items-center w-full py-3 pl-5 cursor-pointer"
+              }`}
               onClick={() => handleLoginToWebsite(key)}
             >
               <img
