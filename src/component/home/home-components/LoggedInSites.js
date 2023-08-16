@@ -34,7 +34,69 @@ export default function LoggedInSites({ searchQuery }) {
   const [selectedKey, setSelectedKey] = useState(null);
   const [isDeleted, setIssDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [paused, setPaused] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    if (paused) {
+      toast.warn(`${"Extension Token Is Paused!"}`, {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setPaused(false);
+    }
+  }, [paused]);
+
+  useEffect(() => {
+    if (isDeleted) {
+      toast.success("Deleted Successfully!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setIssDeleted(false);
+    }
+  }, [isDeleted]);
+
+  useEffect(() => {
+    if (
+      (location.state && location.state.success === true) ||
+      (location.state && location.state.tokenSuccess === true)
+    ) {
+      toast.success(
+        `${
+          location.state && location.state.success === true
+            ? "Saved Successfully!"
+            : location.state && location.state.tokenSuccess === true
+            ? "Token Saved Successfully!"
+            : ""
+        }`,
+        {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
+    }
+  }, [location.state]);
 
   const handleOpen = (key) => {
     setOpen(true);
@@ -93,6 +155,7 @@ export default function LoggedInSites({ searchQuery }) {
             switch (result.data.status) {
               case "pause":
                 message = "Current token status is Paused.";
+                setPaused(true);
                 break;
               case "expired":
                 message = "Current token status is Expired.";
@@ -122,8 +185,6 @@ export default function LoggedInSites({ searchQuery }) {
   };
 
   const entries = Object.entries(tokens);
-  console.log(tokens);
-
   const currentDatetime = new Date();
   const timestamp = currentDatetime.getTime() / 1000;
   const roundedTimeStamp = Math.floor(timestamp);
@@ -131,7 +192,6 @@ export default function LoggedInSites({ searchQuery }) {
   const listItems = [];
   for (const [key, value] of entries) {
     const decodedToken = jwt(value.token === undefined ? value : value.token);
-    console.log(decodedToken);
     const expiredDate = decodedToken.exp;
 
     if (
@@ -156,7 +216,7 @@ export default function LoggedInSites({ searchQuery }) {
             key={key}
           >
             <div
-              className="flex items-center w-full py-3 pl-5"
+              className="flex items-center w-full py-3 pl-5 cursor-pointer"
               onClick={() => handleLoginToWebsite(key)}
             >
               <img
@@ -273,56 +333,6 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
-
-      {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (isDeleted) {
-            toast.success("Deleted Successfully!", {
-              position: "top-center",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-
-            setIssDeleted(false);
-          }
-        }, [isDeleted])
-      }
-
-      {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (
-            (location.state && location.state.success === true) ||
-            (location.state && location.state.tokenSuccess === true)
-          ) {
-            toast.success(
-              `${
-                location.state && location.state.success === true
-                  ? "Saved Successfully!"
-                  : location.state && location.state.tokenSuccess === true
-                  ? "Token Saved Successfully!"
-                  : ""
-              }`,
-              {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
-          }
-        }, [location.state])
-      }
 
       <ToastContainer />
     </>
