@@ -32,7 +32,7 @@ function Body() {
           Dashboard Access
         </button>
         <button
-          className={`ml-3 border-b-2 text-[#00231F]${
+          className={`ml-3 border-b-2 text-[#00231F] ${
             showExtensionToken ? "border-b-[#005E54]" : ""
           } hover:border-b-[#005E54] pb-2 px-2`}
           onClick={handleExtensionToken}
