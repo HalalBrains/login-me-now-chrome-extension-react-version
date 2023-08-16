@@ -46,7 +46,7 @@ if (
     security
   ) {
     lmnSave.addEventListener("click", function (e) {
-		let expiration = lmnExpiration.value;
+      let expiration = lmnExpiration.value;
 
       let formdata = new FormData();
       formdata.append("action", "login_me_now_browser_token_generate");
@@ -71,8 +71,8 @@ if (
               chrome.storage.local.set({ loginMeNowTokens: tokens });
               lmnExt.style.bottom = "-60px";
               setTimeout(() => {
-				lmnExt.style.display = "none";
-			  }, 1000);
+                lmnExt.style.display = "none";
+              }, 1000);
             });
           }
         });
