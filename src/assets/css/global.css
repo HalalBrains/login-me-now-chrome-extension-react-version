@@ -45,8 +45,8 @@ textarea::placeholder {
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: #9880ff;
-  color: #9880ff;
+  background-color: #005e55;
+  color: #005e55;
   box-shadow: 9999px 0 0 -5px;
   animation: dot-pulse 1.5s infinite linear;
   animation-delay: 0.25s;
@@ -61,8 +61,8 @@ textarea::placeholder {
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: #9880ff;
-  color: #9880ff;
+  background-color: #005e55;
+  color: #005e55;
 }
 
 .dot-pulse::before {
