@@ -105,8 +105,9 @@ function ExtensionToken() {
           <textarea
             name="extension-token"
             placeholder="Paste your extension token here..."
-            className="w-full p-2 focus:outline-[#005E54] border border-[#005e55ef] rounded"
+            className="w-full p-2 focus:outline-[#005E54] border border-[#005e55ef] rounded text-[18px]"
             rows={9}
+            required
             value={extensionToken}
             onChange={handleExtensionToken}
           />
