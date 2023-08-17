@@ -172,7 +172,7 @@ function DashboardAccess() {
               accessHours={accessHours}
               setAccessHours={setAccessHours}
               onChange={handleAccessHoursChange}
-              required
+              // required
               type="datetime-local"
               inputProps={{
                 min: getCurrentDateTime(),
