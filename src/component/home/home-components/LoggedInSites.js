@@ -35,6 +35,7 @@ export default function LoggedInSites({ searchQuery }) {
   const [isDeleted, setIssDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -55,8 +56,8 @@ export default function LoggedInSites({ searchQuery }) {
   }, [paused]);
 
   useEffect(() => {
-    if (isDeleted) {
-      toast.success("Deleted Successfully!", {
+    if (somethingWrong) {
+      toast.error("Something Went Wrong!", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
@@ -69,17 +70,20 @@ export default function LoggedInSites({ searchQuery }) {
 
       setIssDeleted(false);
     }
-  }, [isDeleted]);
+  }, [somethingWrong]);
 
   useEffect(() => {
     if (
       (location.state && location.state.success === true) ||
-      (location.state && location.state.tokenSuccess === true)
+      (location.state && location.state.tokenSuccess === true) ||
+      isDeleted
     ) {
       toast.success(
         `${
           location.state && location.state.success === true
             ? "Saved Successfully!"
+            : isDeleted === true
+            ? "Deleted Successfully!"
             : location.state && location.state.tokenSuccess === true
             ? "Token Saved Successfully!"
             : ""
@@ -96,7 +100,7 @@ export default function LoggedInSites({ searchQuery }) {
         }
       );
     }
-  }, [location.state]);
+  }, [location.state, isDeleted]);
 
   const handleOpen = (key) => {
     setOpen(true);
@@ -178,7 +182,7 @@ export default function LoggedInSites({ searchQuery }) {
           });
         })
         .catch((error) => {
-          console.log("error", error);
+          setSomethingWrong(true);
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
         });
     });
