@@ -21,7 +21,7 @@ if (
   typeof siteurl !== "undefined"
 ) {
   // eslint-disable-next-line no-undef
-  chrome.storage.local.get("loginMeNowTokens", function (data) {
+  chrome.storage.local.get({ loginMeNowTokens: {} }, function (data) {
     let tokens = data.loginMeNowTokens;
     if (tokens) {
       let filtered = Object.entries(tokens).filter(
@@ -64,7 +64,7 @@ if (
           if (result.data.link) {
             let unique = Date.now();
             // eslint-disable-next-line no-undef
-            chrome.storage.local.get("loginMeNowTokens", function (data) {
+            chrome.storage.local.get({ loginMeNowTokens: {} }, function (data) {
               let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
               tokens[unique] = result.data.link;
               // eslint-disable-next-line no-undef
