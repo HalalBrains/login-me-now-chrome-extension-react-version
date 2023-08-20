@@ -8,7 +8,12 @@ let wpAdmin = document.querySelector(".wp-admin");
 let lmnExt = document.querySelector("#lmnExt");
 let email = document.getElementById("lmnEmail");
 let siteurl = document.getElementById("lmnSiteUrl");
+let lmnlater = document.getElementById("lmn-later");
 let lmnExpiration = document.getElementById("lmnExpiration");
+
+lmnlater.addEventListener("click", function (e) {
+  console.log("Clicked");
+});
 
 if (
   wpAdmin &&
@@ -29,10 +34,14 @@ if (
           website.user_email.includes(email.dataset.email) &&
           website.site_url.includes(siteurl.dataset.siteurl)
       );
-      if (typeof filtered[0] === "undefined" || !filtered[0]) {
-        console.log(typeof filtered[0])
-        console.log(!filtered[0])
-        lmnExt.style.display = "flex";
+      let eventClicked = false;
+      lmnlater.addEventListener("click", function (e) {
+        eventClicked = true;
+      });
+      if (!eventClicked) {
+        if (typeof filtered[0] === "undefined" || !filtered[0]) {
+          lmnExt.style.display = "flex";
+        }
       }
     }
   });
