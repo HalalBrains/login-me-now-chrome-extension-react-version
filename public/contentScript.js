@@ -30,6 +30,8 @@ if (
           website.site_url.includes(siteurl.dataset.siteurl)
       );
       if (typeof filtered[0] === "undefined" || !filtered[0]) {
+        console.log(typeof filtered[0])
+        console.log(!filtered[0])
         lmnExt.style.display = "flex";
       }
     }
