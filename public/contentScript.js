@@ -31,17 +31,9 @@ if (
           website.site_url.includes(siteurl.dataset.siteurl)
       );
 
-      // let eventClicked = false;
-      // lmnlater.addEventListener("click", function (e) {
-      //   eventClicked = true;
-      // });
-
-      // if (!eventClicked) {
         if (typeof filtered[0] === "undefined" || !filtered[0]) {
           lmnExt.style.display = "flex";
         }
-      // }
-
     }
   });
 
