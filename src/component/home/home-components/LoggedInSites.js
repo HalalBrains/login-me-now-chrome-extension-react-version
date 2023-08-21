@@ -270,7 +270,7 @@ export default function LoggedInSites({ searchQuery }) {
             <Tooltip title="Delete" placement="left">
               <div
                 onClick={() => handleOpen(key)}
-                className="w-[4.75rem] flex justify-center items-center h-[66px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+                className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
               >
                 <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
               </div>
@@ -341,7 +341,6 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
-
       <ToastContainer />
     </>
   );
