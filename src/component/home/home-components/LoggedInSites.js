@@ -155,6 +155,7 @@ export default function LoggedInSites({ searchQuery }) {
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
           if (typeof result.data.status !== "undefined") {
             let message = `Something wen't wrong!`;
+            console.log(result.data.status)
             // eslint-disable-next-line default-case
             switch (result.data.status) {
               case "pause":
@@ -166,11 +167,13 @@ export default function LoggedInSites({ searchQuery }) {
                 break;
               case "blocked":
                 message = "Current token status is Blocked.";
+                setSomethingWrong(true)
                 break;
               // eslint-disable-next-line no-duplicate-case
-              case "blocked":
+              case "invalid":
                 // eslint-disable-next-line no-unused-vars
-                message = "Current token status is Blocked.";
+                message = "Current token status is Invalid.";
+                setSomethingWrong(true)
                 break;
             }
             return;
