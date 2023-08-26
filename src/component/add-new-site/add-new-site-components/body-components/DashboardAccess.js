@@ -46,7 +46,6 @@ function DashboardAccess() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const expiration = new Date(accessHours);
-    console.log(expiration)
     setIsLoading(true);
     generateToken(siteUrl, email, password, expiration);
   };

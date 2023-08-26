@@ -155,7 +155,6 @@ export default function LoggedInSites({ searchQuery }) {
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
           if (typeof result.data.status !== "undefined") {
             let message = `Something wen't wrong!`;
-            console.log(result.data.status)
             // eslint-disable-next-line default-case
             switch (result.data.status) {
               case "pause":
