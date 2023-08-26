@@ -35,6 +35,7 @@ export default function LoggedInSites({ searchQuery }) {
   const [isDeleted, setIssDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -55,8 +56,8 @@ export default function LoggedInSites({ searchQuery }) {
   }, [paused]);
 
   useEffect(() => {
-    if (isDeleted) {
-      toast.success("Deleted Successfully!", {
+    if (somethingWrong) {
+      toast.error("Something Went Wrong!", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
@@ -67,19 +68,22 @@ export default function LoggedInSites({ searchQuery }) {
         theme: "light",
       });
 
-      setIssDeleted(false);
+      setSomethingWrong(false);
     }
-  }, [isDeleted]);
+  }, [somethingWrong]);
 
   useEffect(() => {
     if (
       (location.state && location.state.success === true) ||
-      (location.state && location.state.tokenSuccess === true)
+      (location.state && location.state.tokenSuccess === true) ||
+      isDeleted
     ) {
       toast.success(
         `${
           location.state && location.state.success === true
             ? "Saved Successfully!"
+            : isDeleted === true
+            ? "Deleted Successfully!"
             : location.state && location.state.tokenSuccess === true
             ? "Token Saved Successfully!"
             : ""
@@ -96,7 +100,7 @@ export default function LoggedInSites({ searchQuery }) {
         }
       );
     }
-  }, [location.state]);
+  }, [location.state, isDeleted]);
 
   const handleOpen = (key) => {
     setOpen(true);
@@ -162,11 +166,13 @@ export default function LoggedInSites({ searchQuery }) {
                 break;
               case "blocked":
                 message = "Current token status is Blocked.";
+                setSomethingWrong(true)
                 break;
               // eslint-disable-next-line no-duplicate-case
-              case "blocked":
+              case "invalid":
                 // eslint-disable-next-line no-unused-vars
-                message = "Current token status is Blocked.";
+                message = "Current token status is Invalid.";
+                setSomethingWrong(true)
                 break;
             }
             return;
@@ -178,7 +184,7 @@ export default function LoggedInSites({ searchQuery }) {
           });
         })
         .catch((error) => {
-          console.log("error", error);
+          setSomethingWrong(true);
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
         });
     });
@@ -266,7 +272,7 @@ export default function LoggedInSites({ searchQuery }) {
             <Tooltip title="Delete" placement="left">
               <div
                 onClick={() => handleOpen(key)}
-                className="w-[4.75rem] flex justify-center items-center h-[66px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+                className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
               >
                 <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
               </div>
@@ -337,7 +343,6 @@ export default function LoggedInSites({ searchQuery }) {
           </div>
         </Box>
       </Modal>
-
       <ToastContainer />
     </>
   );

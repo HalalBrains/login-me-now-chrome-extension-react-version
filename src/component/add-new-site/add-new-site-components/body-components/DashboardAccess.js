@@ -45,7 +45,7 @@ function DashboardAccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const expiration = accessHours;
+    const expiration = new Date(accessHours);
     setIsLoading(true);
     generateToken(siteUrl, email, password, expiration);
   };
@@ -93,7 +93,6 @@ function DashboardAccess() {
       .catch((error) => {
         setIsLoading(false);
         setError(true);
-        console.log("rerendered");
       });
   }
 
@@ -172,7 +171,7 @@ function DashboardAccess() {
               accessHours={accessHours}
               setAccessHours={setAccessHours}
               onChange={handleAccessHoursChange}
-              // required
+              required
               type="datetime-local"
               inputProps={{
                 min: getCurrentDateTime(),

@@ -19,11 +19,39 @@ button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton
   svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-i4bv87-MuiSvgIcon-root {
   color: #d11a2a !important;
 }
+
 ::-webkit-scrollbar {
   display: none;
 }
+
+* {
+  scrollbar-width: none;
+}
+
+@supports (-ms-overflow-style: none) {
+  *::-ms-scrollbar {
+    display: none;
+  }
+}
+
+@media not all and (-webkit-min-device-pixel-ratio: 0) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+@supports (scrollbar-width: none) {
+  * {
+    scrollbar-width: none;
+  }
+}
+
+/* scroll bar hide for all browsers  */
+
 textarea::placeholder {
   font-size: 18px;
+}
+.hover\:bg-\[\#dce5f3\].hover\:rounded-\[4px\].mb-\[5px\].flex.justify-between.items-center.mx-\[8px\]:last-child {
+  margin-bottom: 13px;
 }
 /* modal */
 .rounded-\[8px\].MuiBox-root.css-gijrcs:focus-visible {
