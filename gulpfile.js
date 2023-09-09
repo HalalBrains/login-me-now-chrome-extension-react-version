@@ -13,7 +13,6 @@ gulp.task('package-chrome', () => {
     .pipe(zip('chrome-extension.zip'))
     .pipe(gulp.dest('dist'));
 });
-
 // Build and package for Firefox
 gulp.task('build-firefox', () => {
   return gulp.src(['build/**', '!src/chrome', '!build/manifest.json', 'firefox-manifest/manifest.json'])
