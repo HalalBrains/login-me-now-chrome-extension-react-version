@@ -104,7 +104,7 @@ function ExtensionToken() {
         <form onSubmit={handleSubmit}>
           <textarea
             name="extension-token"
-            placeholder="Paste your extension token here..."
+            placeholder="Paste the generated token here from plugin's browser extension option"
             className="w-full p-2 focus:outline-[#005E54] border border-[#005e55ef] rounded text-[18px]"
             rows={9}
             required

@@ -320,7 +320,7 @@ export default function LoggedInSites({ searchQuery }) {
             <img src={trash} alt="" />
           </div>
           <h1 className="text-center text-[#000000] font-bold my-4 text-[17px]">
-            Are you sure you want to delete your account?
+            Sure you want to remove quick dashboard access for this website?
           </h1>
           <div className="flex justify-around">
             <button
@@ -338,7 +338,7 @@ export default function LoggedInSites({ searchQuery }) {
               className="bg-[#28a745] hover:bg-[#218838] text-white font-bold py-2 px-4 rounded"
               onClick={handleClose}
             >
-              No, Cancel
+              No, Keep
             </button>
           </div>
         </Box>
