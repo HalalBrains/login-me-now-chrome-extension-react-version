@@ -8,6 +8,7 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
+  // const [existResult, setExistResult] = useState('')
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -21,7 +22,6 @@ function ExtensionToken() {
       console.log("error: You must add the token.");
       return;
     }
-
     try {
       // Attempt to decode the token
       const data = jwt(extensionToken);
@@ -52,6 +52,11 @@ function ExtensionToken() {
             console.log("error: Something went wrong");
             return;
           }
+
+          // if (result.site_url === link) {
+          //   console.log("token is already exist", "result: ", result.site_url, "link: ", link);
+          //   return; // Stop the code execution here
+          // }
 
           if (result === "pause") {
             setPaused(true);

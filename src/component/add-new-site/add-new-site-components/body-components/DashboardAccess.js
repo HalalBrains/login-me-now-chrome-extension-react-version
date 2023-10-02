@@ -40,6 +40,7 @@ function DashboardAccess() {
   const [accessHours, setAccessHours] = useState("");
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenExist, setTokenExist] = useState(false);
 
   const navigate = useNavigate();
 
@@ -69,25 +70,32 @@ function DashboardAccess() {
         return response.json();
       })
       .then((result) => {
-        if (
-          typeof result !== "undefined" &&
-          typeof result.data !== "undefined" &&
-          typeof result.data.status !== "undefined"
-        ) {
-          console.log("error");
-          return;
-        }
-
-        let unique = Date.now();
         // eslint-disable-next-line no-undef
         chrome.storage.local.get("loginMeNowTokens", function (data) {
           let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-          tokens[unique] = result;
-          // eslint-disable-next-line no-undef
-          chrome.storage.local.set({ loginMeNowTokens: tokens });
-          setIsLoading(false);
-          setError(false);
-          navigate("/", { state: { success: true } });
+
+          for (const tokenKey in tokens) {
+            const token = tokens[tokenKey];
+            if (
+              token.site_url === siteUrl ||
+              token.site_url + "/" === siteUrl
+            ) {
+              console.log("Token exists for this site_url");
+              setTokenExist(true);
+              setIsLoading(false);
+              return;
+            }
+          }
+          let unique = Date.now();
+          if (tokens[unique]) {
+          } else {
+            tokens[unique] = result;
+            // eslint-disable-next-line no-undef
+            chrome.storage.local.set({ loginMeNowTokens: tokens });
+            setIsLoading(false);
+            setError(false);
+            navigate("/", { state: { success: true } });
+          }
         });
       })
       .catch((error) => {
@@ -189,21 +197,28 @@ function DashboardAccess() {
       </ThemeProvider>
 
       {useEffect(() => {
-        if (error) {
-          toast.error("There was an error!", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+        if (error || tokenExist) {
+          toast.error(
+            `${
+              (error === true ? "There was an error!" : "") ||
+              (tokenExist === true ? "Token is already exist" : "")
+            }`,
+            {
+              position: "top-center",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            }
+          );
 
           setError(false);
         }
-      }, [error])}
+      }, [error, tokenExist])}
+
       <ToastContainer />
     </>
   );
