@@ -44,6 +44,13 @@ function ExtensionToken() {
       fetch(`${link}/wp-json/login-me-now/validate`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
+          // console.log(result.site_url)
+          //   if (result.site_url === link) {
+          //     console.log(true);
+          //     return; 
+          //   }
+
+
           if (
             typeof result !== "undefined" &&
             typeof result.data !== "undefined" &&
@@ -52,11 +59,6 @@ function ExtensionToken() {
             console.log("error: Something went wrong");
             return;
           }
-
-          // if (result.site_url === link) {
-          //   console.log("token is already exist", "result: ", result.site_url, "link: ", link);
-          //   return; // Stop the code execution here
-          // }
 
           if (result === "pause") {
             setPaused(true);
@@ -67,7 +69,7 @@ function ExtensionToken() {
             chrome.storage.local.get("loginMeNowTokens", function (data) {
               let tokens = data.loginMeNowTokens || {};
               tokens[unique] = result;
-
+              console.log(tokens)
               // eslint-disable-next-line no-undef
               chrome.storage.local.set({ loginMeNowTokens: tokens });
               navigate("/", { state: { tokenSuccess: true } });
