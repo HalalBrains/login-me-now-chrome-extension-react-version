@@ -243,7 +243,7 @@ export default function LoggedInSites({ searchQuery }) {
                 className="h-10 w-10 rounded-full inline-block"
               />
               <div className="pl-4">
-                <h1 className="text-[16px] font-medium">
+                <h1 className="text-[16px] font-medium truncate-text">
                   {value.user_display_name === "" ||
                   value.user_display_name === null ||
                   value.user_display_name === undefined ||
@@ -254,7 +254,7 @@ export default function LoggedInSites({ searchQuery }) {
                     ? "Empty Name"
                     : value.user_display_name}
                 </h1>
-                <h6>
+                <h6 className="truncate-text">
                   {value.site_url === "" ||
                   value.site_url === null ||
                   value.site_url === undefined ||
