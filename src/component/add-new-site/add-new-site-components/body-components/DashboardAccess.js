@@ -40,7 +40,6 @@ function DashboardAccess() {
   const [accessHours, setAccessHours] = useState("");
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [tokenExist, setTokenExist] = useState(false);
 
   const navigate = useNavigate();
 
@@ -73,19 +72,6 @@ function DashboardAccess() {
         // eslint-disable-next-line no-undef
         chrome.storage.local.get("loginMeNowTokens", function (data) {
           let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-
-          for (const tokenKey in tokens) {
-            const token = tokens[tokenKey];
-            if (
-              token.site_url === siteUrl ||
-              token.site_url + "/" === siteUrl
-            ) {
-              console.log("Token exists for this site_url");
-              setTokenExist(true);
-              setIsLoading(false);
-              return;
-            }
-          }
           let unique = Date.now();
           if (tokens[unique]) {
           } else {
@@ -197,11 +183,10 @@ function DashboardAccess() {
       </ThemeProvider>
 
       {useEffect(() => {
-        if (error || tokenExist) {
+        if (error) {
           toast.error(
             `${
-              (error === true ? "There was an error!" : "") ||
-              (tokenExist === true ? "Token is already exist" : "")
+              (error === true ? "There was an error!" : "")
             }`,
             {
               position: "top-center",
@@ -217,7 +202,7 @@ function DashboardAccess() {
 
           setError(false);
         }
-      }, [error, tokenExist])}
+      }, [error])}
 
       <ToastContainer />
     </>

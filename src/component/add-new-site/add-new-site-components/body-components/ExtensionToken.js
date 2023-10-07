@@ -44,13 +44,6 @@ function ExtensionToken() {
       fetch(`${link}/wp-json/login-me-now/validate`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          // console.log(result.site_url)
-          //   if (result.site_url === link) {
-          //     console.log(true);
-          //     return; 
-          //   }
-
-
           if (
             typeof result !== "undefined" &&
             typeof result.data !== "undefined" &&
