@@ -3,8 +3,8 @@ import Header from "../add-new-site/add-new-site-components/Header";
 import exportFromJSON from "export-from-json";
 
 function ExportImport() {
-    const [fileName, setFileName] = useState(undefined)
-    const [tokens, setTokens] = useState()
+  const [fileName, setFileName] = useState(undefined);
+  const [tokens, setTokens] = useState();
   const handleExport = () => {
     const data = tokens;
     const fileName = "LMN Exported Data";
@@ -14,11 +14,9 @@ function ExportImport() {
   };
 
   const handleImport = () => {
-
-
-    const fileInput = fileInputRef.current;    
+    const fileInput = fileInputRef.current;
     const selectedFile = fileInput.files[0];
-    setFileName(selectedFile.name)
+    setFileName(selectedFile.name);
 
     if (fileInput.files.length === 0) {
       alert("Please select a JSON file to import.");
@@ -30,7 +28,14 @@ function ExportImport() {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(event.target.result);
-        console.log("Imported JSON Data:", jsonData);
+
+        if (typeof jsonData === "object" && !Array.isArray(jsonData)) {
+          // jsonData is an object, you can merge the objects
+          const myData = { ...jsonData, ...tokens };
+          console.log("Imported JSON Data:", myData);
+        } else {
+          alert("JSON data is not an object.");
+        }
       } catch (error) {
         alert("Error parsing JSON file: " + error.message);
       }
@@ -49,8 +54,8 @@ function ExportImport() {
   // eslint-disable-next-line no-undef
   chrome.storage.local.get({ loginMeNowTokens: {} }, function (data) {
     let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-    setTokens(tokens)
-  })
+    setTokens(tokens);
+  });
   return (
     <>
       <Header title="Export and Import data" />
@@ -61,7 +66,7 @@ function ExportImport() {
         >
           Export
         </button>
-        
+
         <label
           htmlFor="fileInput"
           className="bg-[#005e54] text-white text-[18px] py-2.5 px-10 block rounded-full cursor-pointer"
