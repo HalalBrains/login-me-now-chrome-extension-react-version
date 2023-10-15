@@ -30,9 +30,8 @@ function ExportImport() {
         const jsonData = JSON.parse(event.target.result);
 
         if (typeof jsonData === "object" && !Array.isArray(jsonData)) {
-          // jsonData is an object, you can merge the objects
-          const myData = { ...jsonData, ...tokens };
-          console.log("Imported JSON Data:", myData);
+          const importedDataAdded = { ...jsonData, ...tokens };
+          console.log("Imported JSON Data:", importedDataAdded);
         } else {
           alert("JSON data is not an object.");
         }
@@ -47,7 +46,6 @@ function ExportImport() {
   const fileInputRef = useRef();
 
   const handleImportButtonClick = () => {
-    // Trigger a click event on the hidden file input element
     fileInputRef.current.click();
   };
 
