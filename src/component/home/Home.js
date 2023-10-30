@@ -4,7 +4,6 @@ import AddNewSite from "./home-components/AddNewSite";
 import LoggedInSites from "./home-components/LoggedInSites";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Footer from "./home-components/Footer";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,7 +24,6 @@ function Home() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <Footer />
     </>
   );
 }

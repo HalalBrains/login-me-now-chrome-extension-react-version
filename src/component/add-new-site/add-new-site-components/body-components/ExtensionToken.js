@@ -8,7 +8,6 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [error, setError] = useState(false)
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -22,7 +21,6 @@ function ExtensionToken() {
       console.log("error: You must add the token.");
       return;
     }
-
     try {
       // Attempt to decode the token
       const data = jwt(extensionToken);
@@ -64,7 +62,7 @@ function ExtensionToken() {
             chrome.storage.local.get("loginMeNowTokens", function (data) {
               let tokens = data.loginMeNowTokens || {};
               tokens[unique] = result;
-
+              console.log(tokens)
               // eslint-disable-next-line no-undef
               chrome.storage.local.set({ loginMeNowTokens: tokens });
               navigate("/", { state: { tokenSuccess: true } });
