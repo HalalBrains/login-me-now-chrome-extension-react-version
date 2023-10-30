@@ -8,7 +8,6 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
-  // const [existResult, setExistResult] = useState('')
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -50,6 +49,7 @@ function ExtensionToken() {
             typeof result.data.status !== "undefined"
           ) {
             console.log("error: Something went wrong");
+            setError(true)
             return;
           }
 
@@ -104,7 +104,7 @@ function ExtensionToken() {
         <form onSubmit={handleSubmit}>
           <textarea
             name="extension-token"
-            placeholder="Paste your extension token here..."
+            placeholder="Paste the generated token here from plugin's browser extension option"
             className="w-full p-2 focus:outline-[#005E54] border border-[#005e55ef] rounded text-[18px]"
             rows={9}
             required
@@ -119,6 +119,24 @@ function ExtensionToken() {
           </button>
         </form>
       </div>
+
+
+      {useEffect(() => {
+        if (error) {
+          toast.error("There was an error!", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          setError(false);
+        }
+      }, [error])}
 
       <ToastContainer />
     </>
