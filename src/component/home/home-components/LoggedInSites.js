@@ -37,6 +37,27 @@ export default function LoggedInSites({ searchQuery }) {
   const [paused, setPaused] = useState(false);
   const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        `Unable to authenticate the login. Please ensure that the "Browser Extension" module is activated in the "Login Me Now" plugin.`,
+        {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
+
+      setError(false);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (paused) {
@@ -166,14 +187,18 @@ export default function LoggedInSites({ searchQuery }) {
                 break;
               case "blocked":
                 message = "Current token status is Blocked.";
-                setSomethingWrong(true)
+                setSomethingWrong(true);
                 break;
               // eslint-disable-next-line no-duplicate-case
               case "invalid":
                 // eslint-disable-next-line no-unused-vars
                 message = "Current token status is Invalid.";
-                setSomethingWrong(true)
+                setSomethingWrong(true);
                 break;
+            }
+
+            if (result.data.status === 404) {
+              setError(true);
             }
             return;
           }
