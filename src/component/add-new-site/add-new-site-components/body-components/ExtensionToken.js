@@ -8,6 +8,7 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [error, setError] = useState(false)
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -123,7 +124,7 @@ function ExtensionToken() {
 
       {useEffect(() => {
         if (error) {
-          toast.error("There was an error!", {
+          toast.error(`Unable to authenticate the login. Please ensure that the "Browser Extension" module is activated in the "Login Me Now" plugin.`, {
             position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,
