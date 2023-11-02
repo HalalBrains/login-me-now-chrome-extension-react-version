@@ -40,12 +40,11 @@ export default function LoggedInSites({ searchQuery }) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    const pluginLink = <><span>Login authentication failed. Activate the "Browser Extension" module in the </span><a href="https://wordpress.org/plugins/login-me-now/" target="_bank" className="border-b-[#005e54] border-b-[1px] font-bold">Plugin</a><span> to resolve this.</span></>
     if (error) {
-      toast.error(
-        `Unable to authenticate the login. Please ensure that the "Browser Extension" module is activated in the "Login Me Now" plugin.`,
-        {
+      toast.error(pluginLink, {
           position: "top-center",
-          autoClose: 1000,
+          autoClose: 100000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

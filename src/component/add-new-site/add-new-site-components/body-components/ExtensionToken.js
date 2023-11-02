@@ -124,7 +124,8 @@ function ExtensionToken() {
 
       {useEffect(() => {
         if (error) {
-          toast.error(`Unable to authenticate the login. Please ensure that the "Browser Extension" module is activated in the "Login Me Now" plugin.`, {
+            const pluginLink = <a href="https://exapmle.com">Plugin</a>;
+          toast.error(`Login authentication failed. Activate the "Browser Extension" module in the ${pluginLink} to resolve this.`, {
             position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,
