@@ -19,6 +19,7 @@ gulp.task('build-firefox', () => {
   return gulp.src(['build/**', '!src/chrome', '!build/manifest.json', 'firefox-manifest/manifest.json'])
     .pipe(replace('chrome.storage.local', 'browser.storage.local'))
     .pipe(replace('type="datetime-local"', 'type="date"'))
+    .pipe(replace('icon.png', 'firefox-logo.png'))
     .pipe(gulp.dest('firefox'));
 });
 
