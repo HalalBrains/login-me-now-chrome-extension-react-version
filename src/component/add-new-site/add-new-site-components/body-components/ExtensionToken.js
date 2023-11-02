@@ -8,7 +8,7 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -50,7 +50,7 @@ function ExtensionToken() {
             typeof result.data.status !== "undefined"
           ) {
             console.log("error: Something went wrong");
-            setError(true)
+            setError(true);
             return;
           }
 
@@ -63,7 +63,6 @@ function ExtensionToken() {
             chrome.storage.local.get("loginMeNowTokens", function (data) {
               let tokens = data.loginMeNowTokens || {};
               tokens[unique] = result;
-              console.log(tokens)
               // eslint-disable-next-line no-undef
               chrome.storage.local.set({ loginMeNowTokens: tokens });
               navigate("/", { state: { tokenSuccess: true } });
@@ -121,11 +120,25 @@ function ExtensionToken() {
         </form>
       </div>
 
-
       {useEffect(() => {
+        const pluginLink = (
+          <>
+            <span>
+              Login authentication failed. Activate the "Browser Extension"
+              module in the{" "}
+            </span>
+            <a
+              href="https://wordpress.org/plugins/login-me-now/"
+              target="_bank"
+              className="border-b-[#005e54] border-b-[1px] font-bold"
+            >
+              Plugin
+            </a>
+            <span> to resolve this.</span>
+          </>
+        );
         if (error) {
-            const pluginLink = <a href="https://exapmle.com">Plugin</a>;
-          toast.error(`Login authentication failed. Activate the "Browser Extension" module in the ${pluginLink} to resolve this.`, {
+          toast.error(pluginLink, {
             position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,

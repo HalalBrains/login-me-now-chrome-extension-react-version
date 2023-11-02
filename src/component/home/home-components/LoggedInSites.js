@@ -44,7 +44,7 @@ export default function LoggedInSites({ searchQuery }) {
     if (error) {
       toast.error(pluginLink, {
           position: "top-center",
-          autoClose: 100000,
+          autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
