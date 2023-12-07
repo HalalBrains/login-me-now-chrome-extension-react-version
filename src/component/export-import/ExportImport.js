@@ -71,10 +71,11 @@ function ExportImport() {
   });
   return (
     <>
-      <Header title="Export and Import data" />
+      <Header title="" />
       <div className="h-[528px] flex justify-center items-center flex-col">
+        <p className="mb-8 font-medium text-[18px]">Import/Export saved login data</p>
         <button
-          className="bg-[#005e54] text-white text-[18px] py-2.5 px-10 mb-5 block rounded-full"
+          className="bg-[#073A2E] text-white text-[18px] py-2.5 px-10 mb-5 block rounded-[8px]"
           onClick={handleExport}
         >
           Export
@@ -82,7 +83,7 @@ function ExportImport() {
 
         <label
           htmlFor="fileInput"
-          className="bg-[#005e54] text-white text-[18px] py-2.5 px-10 block rounded-full cursor-pointer"
+          className="bg-[#1C8C60] text-white text-[18px] py-2.5 px-10 block rounded-[8px] cursor-pointer"
           onClick={handleImportButtonClick}
         >
           Import
