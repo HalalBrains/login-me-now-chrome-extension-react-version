@@ -11,7 +11,11 @@ import { useLocation } from "react-router-dom";
 import jwt from "jwt-decode";
 import { Tooltip } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+} from "react-beautiful-dnd";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -38,6 +42,12 @@ const LoggedInSites = ({ searchQuery }) => {
   const [paused, setPaused] = useState(false);
   const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
+
+  const DragHandle = styled("div")({
+    cursor: "grab",
+    marginRight: "8px",
+  });
+
   useEffect(() => {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
@@ -47,15 +57,18 @@ const LoggedInSites = ({ searchQuery }) => {
         const orderedTokens = JSON.parse(storedOrder);
         const mergedTokens = { ...orderedTokens, ...tokens };
         setTokens(mergedTokens);
-        localStorage.setItem("loggedInSitesOrder", JSON.stringify(mergedTokens));
+        localStorage.setItem(
+          "loggedInSitesOrder",
+          JSON.stringify(mergedTokens)
+        );
       } else {
         setTokens(tokens);
       }
     });
   }, []);
-  
 
-console.log("token data: ", tokens)
+  console.log("token data: ", tokens);
+
   useEffect(() => {
     if (paused) {
       toast.warn(`${"Extension Token Is Paused!"}`, {
@@ -235,95 +248,81 @@ console.log("token data: ", tokens)
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
-              {...provided.dragHandleProps}
+              className={
+                roundedTimeStamp >= expiredDate
+                  ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+                  : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+              }
             >
-              {isLoading[key] ? (
-                <div
-                  key={key}
-                  className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]"
+              <DragHandle {...provided.dragHandleProps}>
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 32 32"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <div className="stage">
-                    <div className="dot-pulse"></div>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  key={key}
-                  className={
-                    roundedTimeStamp >= expiredDate
-                      ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
-                      : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+                  <path
+                    fill="#b7b7b7"
+                    d="M10 6h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4z"
+                  />
+                </svg>
+              </DragHandle>
+              <div
+                className={`${
+                  roundedTimeStamp >= expiredDate
+                    ? "flex items-center w-full py-3 pl-2 pointer-events-none"
+                    : "flex items-center w-full py-3 pl-2 cursor-pointer"
+                }`}
+                onClick={() => handleLoginToWebsite(key)}
+              >
+                <img
+                  src={
+                    value.site_icon_url === "" ||
+                    value.site_icon_url === null ||
+                    value.site_icon_url === undefined ||
+                    value === "" ||
+                    value === null ||
+                    value === undefined ||
+                    value === value.token
+                      ? defaultLogo
+                      : value.site_icon_url
                   }
-                >
-                  <div
-                    className={` ${
-                      roundedTimeStamp >= expiredDate
-                        ? "flex items-center w-full py-3 pl-5 pointer-events-none"
-                        : "flex items-center w-full py-3 pl-5 cursor-pointer"
-                    }`}
-                    onClick={() => handleLoginToWebsite(key)}
-                  >
-                    <svg
-                      width="30"
-                      height="30"
-                      viewBox="0 0 32 32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill="#b7b7b7"
-                        d="M10 6h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4z"
-                      />
-                    </svg>
-                    <img
-                      src={
-                        value.site_icon_url === "" ||
-                        value.site_icon_url === null ||
-                        value.site_icon_url === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? defaultLogo
-                          : value.site_icon_url
-                      }
-                      alt=""
-                      className="h-10 w-10 rounded-full inline-block"
-                    />
-                    <div className="pl-4">
-                      <h1 className="text-[16px] font-medium">
-                        {value.user_display_name === "" ||
-                        value.user_display_name === null ||
-                        value.user_display_name === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? "Empty Name"
-                          : value.user_display_name}
-                      </h1>
-                      <h6>
-                        {value.site_url === "" ||
-                        value.site_url === null ||
-                        value.site_url === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? "Empty Url"
-                          : value.site_url}
-                      </h6>
-                    </div>
-                  </div>
-                  <Tooltip title="Delete" placement="left">
-                    <div
-                      onClick={() => handleOpen(key)}
-                      className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
-                    >
-                      <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
-                    </div>
-                  </Tooltip>
+                  alt=""
+                  className="h-10 w-10 rounded-full inline-block"
+                />
+                <div className="pl-4">
+                  <h1 className="text-[16px] font-medium">
+                    {value.user_display_name === "" ||
+                    value.user_display_name === null ||
+                    value.user_display_name === undefined ||
+                    value === "" ||
+                    value === null ||
+                    value === undefined ||
+                    value === value.token
+                      ? "Empty Name"
+                      : value.user_display_name}
+                  </h1>
+                  <h6>
+                    {value.site_url === "" ||
+                    value.site_url === null ||
+                    value.site_url === undefined ||
+                    value === "" ||
+                    value === null ||
+                    value === undefined ||
+                    value === value.token
+                      ? "Empty Url"
+                      : value.site_url}
+                  </h6>
                 </div>
-              )}
+              </div>
+              <Tooltip title="Delete" placement="left">
+                <div
+                  onClick={() => handleOpen(key)}
+                  className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+                >
+                  <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
+                </div>
+              </Tooltip>
             </div>
           )}
         </Draggable>
