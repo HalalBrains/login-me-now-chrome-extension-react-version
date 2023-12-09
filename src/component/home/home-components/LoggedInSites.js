@@ -265,6 +265,17 @@ const LoggedInSites = ({ searchQuery }) => {
                     }`}
                     onClick={() => handleLoginToWebsite(key)}
                   >
+                    <svg
+                      width="30"
+                      height="30"
+                      viewBox="0 0 32 32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill="#b7b7b7"
+                        d="M10 6h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4z"
+                      />
+                    </svg>
                     <img
                       src={
                         value.site_icon_url === "" ||
