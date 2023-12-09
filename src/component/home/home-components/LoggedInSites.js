@@ -7,11 +7,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import defaultLogo from "../../../assets/images/wordpress.png";
 import Modal from "@mui/material/Modal";
 import trash from "../../../assets/images/trash.png";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import jwt from "jwt-decode";
 import { Tooltip } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -28,31 +27,16 @@ const style = {
   p: 4,
 };
 
-const LoggedInSites = ({ searchQuery }) => {
+export default function LoggedInSites({ searchQuery }) {
   const [dense] = useState(false);
   const [tokens, setTokens] = useState({});
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isDeleted, setIssDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    // Load order from local storage
-    const storedOrder = localStorage.getItem("loggedInSitesOrder");
-    if (storedOrder) {
-      const orderedTokens = JSON.parse(storedOrder);
-      setTokens(orderedTokens);
-    } else {
-      // eslint-disable-next-line no-undef
-      chrome.storage.local.get("loginMeNowTokens", function (data) {
-        let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-        setTokens(tokens);
-      });
-    }
-  }, []);
 
   useEffect(() => {
     if (paused) {
@@ -122,39 +106,32 @@ const LoggedInSites = ({ searchQuery }) => {
     setOpen(true);
     setSelectedKey(key);
   };
-
   const handleClose = () => setOpen(false);
 
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    chrome.storage.local.get("loginMeNowTokens", function (data) {
+      let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
+      setTokens(tokens);
+    });
+  }, []);
 
-    const items = Array.from(entries);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+  if (tokens === null) {
+    return <div>Loading...</div>;
+  }
 
-    // Update the state with the new order
-    setTokens(Object.fromEntries(items));
-    // Save order to local storage
-    localStorage.setItem(
-      "loggedInSitesOrder",
-      JSON.stringify(Object.fromEntries(items))
-    );
-  };
-
-  const drop = (key) => {
+  function drop(key) {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
       delete tokens[key];
       setTokens(tokens);
-      // Save order to local storage
-      localStorage.setItem("loggedInSitesOrder", JSON.stringify(tokens));
       // eslint-disable-next-line no-undef
       chrome.storage.local.set({ loginMeNowTokens: tokens }, function () {
-        setIsDeleted(true);
+        setIssDeleted(true);
       });
     });
-  };
+  }
 
   const handleLoginToWebsite = (key) => {
     setIsLoading((prevState) => ({ ...prevState, [key]: true }));
@@ -215,6 +192,7 @@ const LoggedInSites = ({ searchQuery }) => {
   const currentDatetime = new Date();
   const timestamp = currentDatetime.getTime() / 1000;
   const roundedTimeStamp = Math.floor(timestamp);
+  console.log("data: ", entries)
 
   const listItems = entries
     .filter(([key, value]) => {
@@ -228,107 +206,84 @@ const LoggedInSites = ({ searchQuery }) => {
         value.site_url.toLowerCase().includes(searchQuery)
       );
     })
-    .map(([key, value], index) => {
+    .map(([key, value]) => {
       const decodedToken = jwt(value.token === undefined ? value : value.token);
       const expiredDate = decodedToken.exp;
+
       return (
-        <Draggable key={key} draggableId={key} index={index}>
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-            >
-              {isLoading[key] ? (
-                <div
-                  key={key}
-                  className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]"
-                >
-                  <div className="stage">
-                    <div className="dot-pulse"></div>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  key={key}
-                  className={
-                    roundedTimeStamp >= expiredDate
-                      ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
-                      : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
-                  }
-                >
-                  <div
-                    className={` ${
-                      roundedTimeStamp >= expiredDate
-                        ? "flex items-center w-full py-3 pl-5 pointer-events-none"
-                        : "flex items-center w-full py-3 pl-5 cursor-pointer"
-                    }`}
-                    onClick={() => handleLoginToWebsite(key)}
-                  >
-                    <svg
-                      width="30"
-                      height="30"
-                      viewBox="0 0 32 32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill="#b7b7b7"
-                        d="M10 6h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4zm-8 8h4v4h-4zm8 0h4v4h-4z"
-                      />
-                    </svg>
-                    <img
-                      src={
-                        value.site_icon_url === "" ||
-                        value.site_icon_url === null ||
-                        value.site_icon_url === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? defaultLogo
-                          : value.site_icon_url
-                      }
-                      alt=""
-                      className="h-10 w-10 rounded-full inline-block"
-                    />
-                    <div className="pl-4">
-                      <h1 className="text-[16px] font-medium">
-                        {value.user_display_name === "" ||
-                        value.user_display_name === null ||
-                        value.user_display_name === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? "Empty Name"
-                          : value.user_display_name}
-                      </h1>
-                      <h6>
-                        {value.site_url === "" ||
-                        value.site_url === null ||
-                        value.site_url === undefined ||
-                        value === "" ||
-                        value === null ||
-                        value === undefined ||
-                        value === value.token
-                          ? "Empty Url"
-                          : value.site_url}
-                      </h6>
-                    </div>
-                  </div>
-                  <Tooltip title="Delete" placement="left">
-                    <div
-                      onClick={() => handleOpen(key)}
-                      className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
-                    >
-                      <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
-                    </div>
-                  </Tooltip>
-                </div>
-              )}
+        isLoading[key] ? (
+          <div key={key} className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
+            <div className="stage">
+              <div className="dot-pulse"></div>
             </div>
-          )}
-        </Draggable>
+          </div>
+        ) : (
+          <div
+            key={key}
+            className={
+              roundedTimeStamp >= expiredDate
+                ? `bg-red-300 rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+                : `hover:bg-[#dce5f3] hover:rounded-[4px] mb-[5px] flex justify-between items-center mx-[8px]`
+            }
+          >
+            <div
+              className={` ${
+                roundedTimeStamp >= expiredDate
+                  ? "flex items-center w-full py-3 pl-5 pointer-events-none"
+                  : "flex items-center w-full py-3 pl-5 cursor-pointer"
+              }`}
+              onClick={() => handleLoginToWebsite(key)}
+            >
+              <img
+                src={
+                  value.site_icon_url === "" ||
+                  value.site_icon_url === null ||
+                  value.site_icon_url === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
+                    ? defaultLogo
+                    : value.site_icon_url
+                }
+                alt=""
+                className="h-10 w-10 rounded-full inline-block"
+              />
+              <div className="pl-4">
+                <h1 className="text-[16px] font-medium">
+                  {value.user_display_name === "" ||
+                  value.user_display_name === null ||
+                  value.user_display_name === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
+                    ? "Empty Name"
+                    : value.user_display_name}
+                </h1>
+                <h6>
+                  {value.site_url === "" ||
+                  value.site_url === null ||
+                  value.site_url === undefined ||
+                  value === "" ||
+                  value === null ||
+                  value === undefined ||
+                  value === value.token
+                    ? "Empty Url"
+                    : value.site_url}
+                </h6>
+              </div>
+            </div>
+            <Tooltip title="Delete" placement="left">
+              <div
+                onClick={() => handleOpen(key)}
+                className="w-[4.75rem] flex justify-center items-center h-[72px] cursor-pointer hover:bg-[#f3dcdc] rounded-[4px] group"
+              >
+                <DeleteIcon className="text-[#005e5496] group-hover:text-[#d11a2a] transition-colors duration-300" />
+              </div>
+            </Tooltip>
+          </div>
+        )
       );
     });
 
@@ -341,20 +296,19 @@ const LoggedInSites = ({ searchQuery }) => {
       >
         <Grid>
           <Demo>
-            <DragDropContext onDragEnd={handleOnDragEnd}>
-              <Droppable droppableId="loggedInSites">
-                {(provided) => (
-                  <List
-                    dense={dense}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {listItems}
-                    {provided.placeholder}
-                  </List>
-                )}
-              </Droppable>
-            </DragDropContext>
+            <List dense={dense}>
+              {listItems.length === 0 && (
+                <div className="text-center">
+                  <p>No Website Found</p>
+                  <Link to="/add-new-site">
+                    <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
+                      Add New Site
+                    </button>
+                  </Link>
+                </div>
+              )}
+              {listItems}
+            </List>
           </Demo>
         </Grid>
       </Box>
@@ -395,6 +349,4 @@ const LoggedInSites = ({ searchQuery }) => {
       <ToastContainer />
     </>
   );
-};
-
-export default LoggedInSites;
+}
