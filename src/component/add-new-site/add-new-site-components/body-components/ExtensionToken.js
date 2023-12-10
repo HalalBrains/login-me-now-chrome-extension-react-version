@@ -8,6 +8,7 @@ function ExtensionToken() {
   const [extensionToken, setExtensionToken] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const handleExtensionToken = (e) => {
@@ -21,7 +22,6 @@ function ExtensionToken() {
       console.log("error: You must add the token.");
       return;
     }
-
     try {
       // Attempt to decode the token
       const data = jwt(extensionToken);
@@ -50,6 +50,7 @@ function ExtensionToken() {
             typeof result.data.status !== "undefined"
           ) {
             console.log("error: Something went wrong");
+            setError(true);
             return;
           }
 
@@ -62,7 +63,6 @@ function ExtensionToken() {
             chrome.storage.local.get("loginMeNowTokens", function (data) {
               let tokens = data.loginMeNowTokens || {};
               tokens[unique] = result;
-
               // eslint-disable-next-line no-undef
               chrome.storage.local.set({ loginMeNowTokens: tokens });
               navigate("/", { state: { tokenSuccess: true } });
@@ -104,7 +104,7 @@ function ExtensionToken() {
         <form onSubmit={handleSubmit}>
           <textarea
             name="extension-token"
-            placeholder="Paste your extension token here..."
+            placeholder="Paste the generated token here from plugin's browser extension option"
             className="w-full p-2 focus:outline-[#005E54] border border-[#005e55ef] rounded text-[18px]"
             rows={9}
             required
@@ -119,6 +119,39 @@ function ExtensionToken() {
           </button>
         </form>
       </div>
+
+      {useEffect(() => {
+        const pluginLink = (
+          <>
+            <span>
+              Login authentication failed. Activate the "Browser Extension"
+              module in the{" "}
+            </span>
+            <a
+              href="https://wordpress.org/plugins/login-me-now/"
+              target="_bank"
+              className="border-b-[#005e54] border-b-[1px] font-bold"
+            >
+              Plugin
+            </a>
+            <span> to resolve this.</span>
+          </>
+        );
+        if (error) {
+          toast.error(pluginLink, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          setError(false);
+        }
+      }, [error])}
 
       <ToastContainer />
     </>

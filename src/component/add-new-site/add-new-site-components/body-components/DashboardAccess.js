@@ -45,7 +45,7 @@ function DashboardAccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const expiration = accessHours;
+    const expiration = new Date(accessHours);
     setIsLoading(true);
     generateToken(siteUrl, email, password, expiration);
   };
@@ -69,25 +69,19 @@ function DashboardAccess() {
         return response.json();
       })
       .then((result) => {
-        if (
-          typeof result !== "undefined" &&
-          typeof result.data !== "undefined" &&
-          typeof result.data.status !== "undefined"
-        ) {
-          console.log("error");
-          return;
-        }
-
-        let unique = Date.now();
         // eslint-disable-next-line no-undef
         chrome.storage.local.get("loginMeNowTokens", function (data) {
           let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-          tokens[unique] = result;
-          // eslint-disable-next-line no-undef
-          chrome.storage.local.set({ loginMeNowTokens: tokens });
-          setIsLoading(false);
-          setError(false);
-          navigate("/", { state: { success: true } });
+          let unique = Date.now();
+          if (tokens[unique]) {
+          } else {
+            tokens[unique] = result;
+            // eslint-disable-next-line no-undef
+            chrome.storage.local.set({ loginMeNowTokens: tokens });
+            setIsLoading(false);
+            setError(false);
+            navigate("/", { state: { success: true } });
+          }
         });
       })
       .catch((error) => {
@@ -190,20 +184,26 @@ function DashboardAccess() {
 
       {useEffect(() => {
         if (error) {
-          toast.error("There was an error!", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error(
+            `${
+              (error === true ? "There was an error!" : "")
+            }`,
+            {
+              position: "top-center",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            }
+          );
 
           setError(false);
         }
       }, [error])}
+
       <ToastContainer />
     </>
   );

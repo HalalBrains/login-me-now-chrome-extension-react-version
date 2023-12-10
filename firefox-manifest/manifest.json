@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Login Me Now - WordPress Login Manager",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Login Me Now",
   "description": "A time saver instant login app for WordPress Websites",
   "homepage_url": "https://loginmenow.com/",
@@ -24,7 +24,7 @@
   
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://*/wp-admin/*", "https://*/wp-admin/*"],
       "js": ["contentScript.js"]
     }
   ]

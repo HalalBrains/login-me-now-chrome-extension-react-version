@@ -7,15 +7,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import defaultLogo from "../../../assets/images/wordpress.png";
 import Modal from "@mui/material/Modal";
 import trash from "../../../assets/images/trash.png";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import jwt from "jwt-decode";
 import { Tooltip } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -218,7 +214,6 @@ const LoggedInSites = ({ searchQuery }) => {
         })
         .catch((error) => {
           setSomethingWrong(true);
-          console.log(error)
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
         });
     });
@@ -243,15 +238,14 @@ const LoggedInSites = ({ searchQuery }) => {
     .map(([key, value], index) => {
       const decodedToken = jwt(value.token === undefined ? value : value.token);
       const expiredDate = decodedToken.exp;
-      console.log(expiredDate)
-      return (
-        isLoading[key] ? (
-          <div key={key} className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
-            <div className="stage">
-              <div className="dot-pulse"></div>
-            </div>
+      console.log(expiredDate);
+      return isLoading[key] ? (
+        <div key={key} className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
+          <div className="stage">
+            <div className="dot-pulse"></div>
           </div>
-        ) : (
+        </div>
+      ) : (
         <Draggable key={key} draggableId={key} index={index}>
           {(provided) => (
             <div
@@ -334,7 +328,7 @@ const LoggedInSites = ({ searchQuery }) => {
               </Tooltip>
             </div>
           )}
-        </Draggable>)
+        </Draggable>
       );
     });
 
@@ -355,6 +349,16 @@ const LoggedInSites = ({ searchQuery }) => {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
+                    {listItems.length === 0 && (
+                      <div className="text-center">
+                        <p>No Website Found</p>
+                        <Link to="/add-new-site">
+                          <button className="bg-[#005E54] hover:bg-[#005e55ef] text-white font-bold py-3 rounded w-full mt-4">
+                            Add New Site
+                          </button>
+                        </Link>
+                      </div>
+                    )}
                     {listItems}
                     {provided.placeholder}
                   </List>
