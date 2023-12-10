@@ -218,6 +218,7 @@ const LoggedInSites = ({ searchQuery }) => {
         })
         .catch((error) => {
           setSomethingWrong(true);
+          console.log(error)
           setIsLoading((prevState) => ({ ...prevState, [key]: false }));
         });
     });
@@ -242,7 +243,15 @@ const LoggedInSites = ({ searchQuery }) => {
     .map(([key, value], index) => {
       const decodedToken = jwt(value.token === undefined ? value : value.token);
       const expiredDate = decodedToken.exp;
+      console.log(expiredDate)
       return (
+        isLoading[key] ? (
+          <div key={key} className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
+            <div className="stage">
+              <div className="dot-pulse"></div>
+            </div>
+          </div>
+        ) : (
         <Draggable key={key} draggableId={key} index={index}>
           {(provided) => (
             <div
@@ -325,7 +334,7 @@ const LoggedInSites = ({ searchQuery }) => {
               </Tooltip>
             </div>
           )}
-        </Draggable>
+        </Draggable>)
       );
     });
 
