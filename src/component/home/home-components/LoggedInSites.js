@@ -138,17 +138,36 @@ const LoggedInSites = ({ searchQuery }) => {
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
-
+  
+    // Create a copy of the entries array
     const items = Array.from(entries);
+  
+    // Remove the item from the source index
     const [reorderedItem] = items.splice(result.source.index, 1);
+  
+    // Insert the item at the destination index
     items.splice(result.destination.index, 0, reorderedItem);
+  
+    // Log the reordered array
+    console.log("Reordered Array:", Object.fromEntries(items));
+    console.log("reordered", Object.fromEntries(items))
+    console.log("reordered2", items)
 
+    // eslint-disable-next-line no-undef
+    chrome.storage.local.set({ loginMeNowTokens: Object.fromEntries(items) }, function () {
+    });
+  
+    // Update state
     setTokens(Object.fromEntries(items));
+  
+    // Update local storage
     localStorage.setItem(
       "loggedInSitesOrder",
       JSON.stringify(Object.fromEntries(items))
     );
   };
+  
+  
 
   const drop = (key) => {
     // eslint-disable-next-line no-undef
@@ -238,7 +257,6 @@ const LoggedInSites = ({ searchQuery }) => {
     .map(([key, value], index) => {
       const decodedToken = jwt(value.token === undefined ? value : value.token);
       const expiredDate = decodedToken.exp;
-      console.log(expiredDate);
       return isLoading[key] ? (
         <div key={key} className="bg-[#dce5f3] mb-[5px] mx-[8px] rounded-[4px]">
           <div className="stage">
