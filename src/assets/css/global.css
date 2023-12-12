@@ -114,6 +114,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   padding-left: 47%;
   padding-top: 15px;
   padding-bottom: 15px;
+  cursor: pointer;
 }
 
 @keyframes dot-pulse-before {
