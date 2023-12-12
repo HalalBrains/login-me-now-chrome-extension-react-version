@@ -110,6 +110,11 @@ textarea::placeholder {
   animation: dot-pulse-after 1.5s infinite linear;
   animation-delay: 0.5s;
 }
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  padding-left: 47%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
 
 @keyframes dot-pulse-before {
   0% {
