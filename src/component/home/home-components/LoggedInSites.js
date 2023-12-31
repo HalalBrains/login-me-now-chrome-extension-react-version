@@ -17,6 +17,10 @@ const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+console.log(343434)
+
+//chrome-extension://npbbkekmihhdmgbgofbhngchjeeldocc/index.html
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -45,25 +49,13 @@ const LoggedInSites = ({ searchQuery }) => {
   });
 
   useEffect(() => {
+
     // eslint-disable-next-line no-undef
-    chrome.storage.local.get("loginMeNowTokens", function (data) {
+    chrome.storage.local.get(["loginMeNowTokens"], function (data) {
       let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
-      const storedOrder = localStorage.getItem("loggedInSitesOrder");
-      if (storedOrder) {
-        const orderedTokens = JSON.parse(storedOrder);
-        const mergedTokens = { ...orderedTokens, ...tokens };
-        setTokens(mergedTokens);
-        localStorage.setItem(
-          "loggedInSitesOrder",
-          JSON.stringify(mergedTokens)
-        );
-      } else {
-        setTokens(tokens);
-      }
+      setTokens(tokens);
     });
   }, []);
-
-  console.log("token data: ", tokens);
 
   useEffect(() => {
     if (paused) {
@@ -138,54 +130,58 @@ const LoggedInSites = ({ searchQuery }) => {
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
-  
-    // Create a copy of the entries array
-    const items = Array.from(entries);
-  
-    // Remove the item from the source index
-    const [reorderedItem] = items.splice(result.source.index, 1);
-  
-    // Insert the item at the destination index
-    items.splice(result.destination.index, 0, reorderedItem);
-  
-    // Log the reordered array
-    console.log("Reordered Array:", Object.fromEntries(items));
-    console.log("reordered", Object.fromEntries(items))
-    console.log("reordered2", items)
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
 
     // eslint-disable-next-line no-undef
-    chrome.storage.local.set({ loginMeNowTokens: Object.fromEntries(items) }, function () {
+    console.log('Tokens: ', tokens);
+
+
+    const items = Object.entries(tokens);
+    console.log('Convert to object items:', items);
+
+    const [removed] = items.splice(sourceIndex, 1);
+    console.log('Dragged Item: ', removed);
+
+    items.splice(destinationIndex, 0, removed);
+    console.log('Pushed items: ', items);
+
+    const updatedOrder = Object.fromEntries(items);
+    console.log('Updated Order: ', updatedOrder);
+
+    // eslint-disable-next-line no-undef
+    chrome.storage.local.set({ loginMeNowTokens: updatedOrder }, function () {
+        console.log('Chome Set:', updatedOrder)
+        setTokens(updatedOrder);
+        console.log('React state:', tokens)
     });
-  
-    // Update state
-    setTokens(Object.fromEntries(items));
-  
-    // Update local storage
-    localStorage.setItem(
-      "loggedInSitesOrder",
-      JSON.stringify(Object.fromEntries(items))
-    );
+
   };
-  
-  
 
   const drop = (key) => {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens ? data.loginMeNowTokens : {};
       delete tokens[key];
-      setTokens(tokens);
-      localStorage.setItem("loggedInSitesOrder", JSON.stringify(tokens));
-      // eslint-disable-next-line no-undef
-      chrome.storage.local.set({ loginMeNowTokens: tokens }, function () {
+
+    // eslint-disable-next-line no-undef
+      chrome.storage.local.set({ loginMeNowTokens: order }, function () {
         setIsDeleted(true);
+        setTokens(tokens);
       });
     });
   };
+  
+
+
+  // eslint-disable-next-line no-undef
+  console.log(chrome.storage.local.get("loginMeNowTokens"))
 
   const handleLoginToWebsite = (key) => {
     setIsLoading((prevState) => ({ ...prevState, [key]: true }));
-    // eslint-disable-next-line no-undef
+
+          // eslint-disable-next-line no-undef
     chrome.storage.local.get("loginMeNowTokens", function (data) {
       let tokens = data.loginMeNowTokens;
       const { site_url, token } = tokens[key];
@@ -200,31 +196,32 @@ const LoggedInSites = ({ searchQuery }) => {
         `${site_url}/wp-json/login-me-now/generate-onetime-number`,
         requestOptions
       )
-        .then((response) => response.json())
-        .then((result) => {
-          setIsLoading((prevState) => ({ ...prevState, [key]: false }));
-          if (typeof result.data.status !== "undefined") {
-            let message = `Something wen't wrong!`;
-            // eslint-disable-next-line default-case
-            switch (result.data.status) {
-              case "pause":
-                message = "Current token status is Paused.";
-                setPaused(true);
-                break;
-              case "expired":
-                message = "Current token status is Expired.";
-                break;
-              case "blocked":
-                message = "Current token status is Blocked.";
-                break;
-              // eslint-disable-next-line no-duplicate-case
-              case "blocked":
-                // eslint-disable-next-line no-unused-vars
-                message = "Current token status is Blocked.";
-                break;
-            }
-            return;
+      .then((response) => response.json())
+      .then((result) => {
+        setIsLoading((prevState) => ({ ...prevState, [key]: false }));
+        if (typeof result.data.status !== "undefined") {
+          let message = `Something wen't wrong!`;
+          // eslint-disable-next-line default-case
+          switch (result.data.status) {
+            case "pause":
+              message = "Current token status is Paused.";
+              setPaused(true);
+              break;
+            case "expired":
+              message = "Current token status is Expired.";
+              break;
+            case "blocked":
+              message = "Current token status is Blocked.";
+              break;
+            // eslint-disable-next-line no-duplicate-case
+            case "blocked":
+              // eslint-disable-next-line no-unused-vars
+              message = "Current token status is Blocked.";
+              break;
           }
+          return;
+        }
+
           // eslint-disable-next-line no-undef
           chrome.tabs.create({
             url: result.data.link + "&extension=chrome",
@@ -245,7 +242,6 @@ const LoggedInSites = ({ searchQuery }) => {
   const listItems = entries
     .filter(([key, value]) => {
       const decodedToken = jwt(value.token === undefined ? value : value.token);
-      // eslint-disable-next-line no-unused-vars
       const expiredDate = decodedToken.exp;
 
       return (
