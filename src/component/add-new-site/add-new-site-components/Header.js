@@ -3,10 +3,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header({title}) {
   return (
     <div className="p-6 pr-4 py-2 flex justify-between items-center border-b">
-      <h1 className="text-[22px] font-semibold text-[#00231F]">Add New Site</h1>
+      <h1 className="text-[22px] font-semibold text-[#00231F]">{title}</h1>
       <Link to="/">
         <Tooltip title="Go to Dashboard">
           <ArrowBackIcon fontSize="large" style={{ color: "#005E54" }} />
