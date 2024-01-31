@@ -37,6 +37,40 @@ export default function LoggedInSites({ searchQuery }) {
   const [paused, setPaused] = useState(false);
   const [somethingWrong, setSomethingWrong] = useState(false);
   const location = useLocation();
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const pluginLink = (
+      <>
+        <span>
+          Login authentication failed. Activate the "Browser Extension" module
+          in the{" "}
+        </span>
+        <a
+          href="https://wordpress.org/plugins/login-me-now/"
+          target="_bank"
+          className="border-b-[#005e54] border-b-[1px] font-bold"
+        >
+          Plugin
+        </a>
+        <span> to resolve this.</span>
+      </>
+    );
+    if (error) {
+      toast.error(pluginLink, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setError(false);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (paused) {
@@ -166,12 +200,18 @@ export default function LoggedInSites({ searchQuery }) {
                 break;
               case "blocked":
                 message = "Current token status is Blocked.";
+                setSomethingWrong(true);
                 break;
               // eslint-disable-next-line no-duplicate-case
-              case "blocked":
+              case "invalid":
                 // eslint-disable-next-line no-unused-vars
-                message = "Current token status is Blocked.";
+                message = "Current token status is Invalid.";
+                setSomethingWrong(true);
                 break;
+            }
+
+            if (result.data.status === 404) {
+              setError(true);
             }
             return;
           }
@@ -243,7 +283,7 @@ export default function LoggedInSites({ searchQuery }) {
                 className="h-10 w-10 rounded-full inline-block"
               />
               <div className="pl-4">
-                <h1 className="text-[16px] font-medium">
+                <h1 className="text-[16px] font-medium truncate-text">
                   {value.user_display_name === "" ||
                   value.user_display_name === null ||
                   value.user_display_name === undefined ||
@@ -254,7 +294,7 @@ export default function LoggedInSites({ searchQuery }) {
                     ? "Empty Name"
                     : value.user_display_name}
                 </h1>
-                <h6>
+                <h6 className="truncate-text">
                   {value.site_url === "" ||
                   value.site_url === null ||
                   value.site_url === undefined ||
@@ -318,7 +358,7 @@ export default function LoggedInSites({ searchQuery }) {
             <img src={trash} alt="" />
           </div>
           <h1 className="text-center text-[#000000] font-bold my-4 text-[17px]">
-            Are you sure you want to delete your account?
+            Sure you want to remove quick dashboard access for this website?
           </h1>
           <div className="flex justify-around">
             <button
@@ -336,7 +376,7 @@ export default function LoggedInSites({ searchQuery }) {
               className="bg-[#28a745] hover:bg-[#218838] text-white font-bold py-2 px-4 rounded"
               onClick={handleClose}
             >
-              No, Cancel
+              No, Keep
             </button>
           </div>
         </Box>

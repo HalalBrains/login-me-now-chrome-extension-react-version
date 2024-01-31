@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Login Me Now - WordPress Login Manager",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "author": "Login Me Now",
   "description": "A time saver instant login app for WordPress Websites",
   "update_url": "https://clients2.google.com/service/update2/crx",
